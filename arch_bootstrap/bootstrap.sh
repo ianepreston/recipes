@@ -18,3 +18,24 @@ Reset="\033[0m"
 Red="\033[31m"
 Green="\033[32m"
 Yellow="\033[33m"
+
+# Paths
+WORKING_DIR=$(pwd)
+LOG="${WORKING_DIR}/arch-install.log"
+[[ -f ${LOG} ]] && rm -f "${LOG}"
+echo "Start log..." >>"${LOG}"
+
+# Flags and variables
+SYS_ARCH=$(uname -m) # Architecture (x86_64)
+UEFI=0
+XPINGS=0 # CONNECTION CHECK
+KEYMAP="us"
+
+# User provided variables
+HOST_NAME="computer"
+KERNEL_VERSION="default"
+DUAL_DISK=0
+MAIN_DISK="/dev/sda"
+SECOND_DISK=""
+ROOT_PWD=""
+ANSIBLE_PWD=""
