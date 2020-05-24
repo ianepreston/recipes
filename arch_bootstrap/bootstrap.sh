@@ -153,3 +153,38 @@ is_package_installed() {
   done
   return 1
 }
+
+### Verification Functions
+
+check_root() {
+  print_info "Checking root permissions..."
+
+  if [[ "$(id -u)" != "0" ]]; then
+    error_msg "ERROR! You must execute the script as the 'root' user."
+  fi
+}
+
+check_archlinux() {
+  if [[ ! -e /etc/arch-release ]]; then
+    error_msg "ERROR! You must execute the script on Arch Linux."
+  fi
+}
+
+check_boot_system() {
+  if [[ "$(cat /sys/class/dmi/id/sys_vendor)" == 'Apple Inc.' ]] || [[ "$(cat /sys/class/dmi/id/sys_vendor)" == 'Apple Computer, Inc.' ]]; then
+    modprobe -r -q efivars || true # if MAC
+  else
+    modprobe -q efivarfs # all others
+  fi
+
+  if [[ -d "/sys/firmware/efi/" ]]; then
+    ## Mount efivarfs if it is not already mounted
+    # shellcheck disable=SC2143
+    if [[ -z $(mount | grep /sys/firmware/efi/efivars) ]]; then
+      mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+    fi
+    UEFI=1
+  else
+    UEFI=0
+  fi
+}
