@@ -332,3 +332,314 @@ unmount_partitions() {
   done
 }
 
+find_boot_partition() {
+  print_title "Boot partition selection"
+  print_title_info "Select the partition to use for boot. This should be an already existing boot partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
+  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep "[0-9]$"))
+  blank_line
+  PS3="Enter your option":
+  lsblk $MAIN_DISK --output NAME,FSTYPE,LABEL,SIZE
+  echo -e "select a partition"
+  select partition in "${partition_list[@]}"; do
+    if contains_element "$partition" "${partition_list[@]}"; then
+      break
+    else
+      invalid_option
+    fi
+  done
+  BOOT_PARTITION=$partition
+}
+
+find_install_partition() {
+  print_title "Installation partition selection"
+  print_title_info "Select the partition to install Arch. This should be an already existing boot partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
+  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep "[0-9]$"))
+  blank_line
+  PS3="Enter your option":
+  lsblk $MAIN_DISK --output NAME,FSTYPE,LABEL,SIZE
+  echo -e "select a partition"
+  select partition in "${partition_list[@]}"; do
+    if contains_element "$partition" "${partition_list[@]}"; then
+      break
+    else
+      invalid_option
+    fi
+  done
+  INSTALL_PARTITION=$partition
+}
+
+setup_lvm() {
+  print_info "Setting up LVM"
+
+  pvcreate $INSTALL_PARTITION
+  vgcreate "vg_main" $INSTALL_PARTITION
+
+  lvcreate -l 5%VG "vg_main" -n lv_var
+  lvcreate -l 45%VG "vg_main" -n lv_root
+  lvcreate -l 40%VG "vg_main" -n lv_home
+}
+
+format_partitions() {
+  print_info "Formatting partitions"
+
+  mkfs.ext4 "/dev/mapper/vg_main-lv_var"
+  mkfs.ext4 "/dev/mapper/vg_main-lv_root"
+  mkfs.ext4 "/dev/mapper/vg_main-lv_home"
+}
+
+mount_partitions() {
+  print_info "Mounting partitions"
+
+  # First load the root
+  mount -t ext4 -o defaults,rw,relatime,errors=remount-ro /dev/mapper/vg_main-lv_root /mnt
+
+  # Create the paths for the other mounts
+  mkdir -p "/mnt/boot/efi"
+  mkdir -p "/mnt/var"
+  mkdir -p "/mnt/home"
+
+  if [[ $UEFI == 1 ]]; then
+    mount -t vfat -o defaults,rw,relatime,utf8,errors=remount-ro "${MAIN_DISK}1" "/mnt/boot/efi"
+  fi
+
+  # Mount others
+  mount -t ext4 -o defaults,rw,relatime /dev/mapper/vg_main-lv_var /mnt/var
+  mount -t ext4 -o defaults,rw,relatime /dev/mapper/vg_main-lv_home /mnt/home
+}
+
+install_base_system() {
+  print_info "Installing base system"
+
+  pacman -S --noconfirm archlinux-keyring |& tee -a "${LOG}"
+
+  # Install kernel
+  case "$KERNEL_VERSION" in
+  "lts")
+    pacstrap /mnt base base-devel linux-lts linux-lts-headers linux-firmware |& tee -a "${LOG}"
+    [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above."
+    ;;
+  "hard")
+    pacstrap /mnt base base-devel linux-hardened linux-hardened-headers linux-firmware |& tee -a "${LOG}"
+    [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above."
+    ;;
+  *)
+    pacstrap /mnt base base-devel linux linux-headers linux-firmware |& tee -a "${LOG}"
+    [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above."
+    ;;
+  esac
+
+  # Install file system tools
+  pacstrap /mnt lvm2 dosfstools mtools gptfdisk |& tee -a "${LOG}"
+  [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 4."
+
+  # Install networking tools
+  pacstrap /mnt dialog networkmanager networkmanager-openvpn iw wireless_tools wpa_supplicant |& tee -a "${LOG}"
+  [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 5."
+
+  # Remaining misc tools
+  pacstrap /mnt reflector git gvim openssh ansible terminus-font systemd-swap |& tee -a "${LOG}"
+  [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 6."
+
+  # Add the ssh group
+  arch_chroot "groupadd ssh"
+
+  # Set the NetworkManager & ssh services to be enabled
+  arch_chroot "systemctl enable NetworkManager.service"
+  arch_chroot "systemctl enable wpa_supplicant.service"
+  arch_chroot "systemctl enable sshd.service"
+}
+
+configure_keymap() {
+  print_info "Configure keymap"
+  echo "KEYMAP=$KEYMAP" >/mnt/etc/vconsole.conf
+  echo "FONT=ter-120n" >>/mnt/etc/vconsole.conf
+}
+
+configure_fstab() {
+  print_info "Write fstab"
+
+  genfstab -U -p /mnt >/mnt/etc/fstab
+}
+
+configure_hostname() {
+  print_info "Setup hostname"
+
+  echo "$HOST_NAME" >/mnt/etc/hostname
+
+  # Add the lines in case they are not in the file...
+  arch_chroot "grep -q '^127.0.0.1\s' /etc/hosts || echo '127.0.0.1  temp' >> /etc/hosts"
+  arch_chroot "grep -q '^::1\s' /etc/hosts || echo '::1  temp' >> /etc/hosts"
+  arch_chroot "grep -q '^127.0.1.1\s' /etc/hosts || echo '127.0.1.1  temp' >> /etc/hosts"
+  # Now put in the proper values
+  arch_chroot "sed -i 's/^127.0.0.1\s.*$/127.0.0.1  localhost/' /etc/hosts"
+  arch_chroot "sed -i 's/^::1\s.*$/::1  localhost/' /etc/hosts"
+  arch_chroot "sed -i 's/^127.0.1.1\s.*$/127.0.1.1  '${HOST_NAME}' '${HOST_NAME%%.*}'/' /etc/hosts"
+}
+
+configure_timezone() {
+  print_info "Configuring timezone"
+
+  arch_chroot "ln -sf /usr/share/zoneinfo/Canada/Mountain /etc/localtime"
+  arch_chroot "sed -i '/#NTP=/d' /etc/systemd/timesyncd.conf"
+  arch_chroot "sed -i 's/#Fallback//' /etc/systemd/timesyncd.conf"
+  arch_chroot 'echo "FallbackNTP=0.pool.ntp.org 1.pool.ntp.org 0.us.pool.ntp.org" >> /etc/systemd/timesyncd.conf'
+  arch_chroot "systemctl enable systemd-timesyncd.service"
+}
+
+configure_locale() {
+  print_info "Configuring locale"
+  echo 'LANG="en_CA.UTF-8"' >/mnt/etc/locale.conf
+  echo 'LANGUAGE="en_CA:en"' >>/mnt/etc/locale.conf
+  echo 'LC_ALL="en_CA.UTF-8"' >>/mnt/etc/locale.conf
+  arch_chroot "sed -i 's/# en_CA.UTF-8/en_CA.UTF-8/' /etc/locale.gen"
+  arch_chroot "sed -i 's/#en_CA.UTF-8/en_CA.UTF-8/' /etc/locale.gen"
+  arch_chroot "locale-gen"
+}
+
+configure_mkinitcpio() {
+  print_info "Configuring mkinitcpio"
+
+  sed -i '/^HOOKS/c\HOOKS=(systemd keyboard autodetect modconf block sd-vconsole sd-encrypt sd-lvm2 filesystems fsck)' /mnt/etc/mkinitcpio.conf |& tee -a "${LOG}"
+
+  # Setup compression
+  sed -i 's/#COMPRESSION="lz4"/COMPRESSION="lz4"/' /mnt/etc/mkinitcpio.conf |& tee -a "${LOG}"
+  sed -i '/^#COMPRESSION_OPTIONS/c\COMPRESSION_OPTIONS=(-3)' /mnt/etc/mkinitcpio.conf |& tee -a "${LOG}"
+
+  arch_chroot "mkinitcpio -P"
+}
+
+configure_systemd_swap() {
+  print_info "Configuring systemd-swap"
+
+  arch_chroot "systemctl enable systemd-swap.service"
+
+  arch_chroot 'echo -e "zswap_enabled=1\nzram_enabled=0\nswapfc_enabled=1" > /etc/systemd/swap.conf.d/swap-config.conf'
+}
+
+install_bootloader() {
+  print_info "Install bootloader"
+
+  if [[ $UEFI == 1 ]]; then
+    pacstrap /mnt grub os-prober breeze-grub |& tee -a "${LOG}"
+    [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 7."
+  else
+    pacstrap /mnt grub-bios os-prober breeze-grub |& tee -a "${LOG}"
+    [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 8."
+  fi
+
+  if [[ $UEFI == 1 ]]; then
+    pacstrap /mnt efibootmgr |& tee -a "${LOG}"
+  fi
+}
+
+configure_bootloader() {
+  print_info "Configure bootloader"
+
+  if [[ $UEFI == 1 ]]; then
+    arch_chroot "grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub --recheck"
+  else
+    arch_chroot "grub-install --target=i386-pc --recheck --debug /dev/sda"
+  fi
+
+  # Update grub config
+  sed -i '/^GRUB_TIMEOUT/c\GRUB_TIMEOUT=5' /mnt/etc/default/grub |& tee -a "${LOG}"
+  # shellcheck disable=SC2016
+  sed -i '/^GRUB_DISTRIBUTOR/c\GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Arch`' /mnt/etc/default/grub |& tee -a "${LOG}"
+  sed -i '/^GRUB_CMDLINE_LINUX_DEFAULT/c\GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"' /mnt/etc/default/grub |& tee -a "${LOG}"
+  sed -i '/^GRUB_GFXMODE/c\GRUB_GFXMODE=1024x768x32,1024x768x24,1024x768,auto' /mnt/etc/default/grub |& tee -a "${LOG}"
+  sed -i '/^GRUB_DISABLE_RECOVERY/c\#GRUB_DISABLE_RECOVERY=true' /mnt/etc/default/grub |& tee -a "${LOG}"
+  sed -i '/^GRUB_THEME/c\GRUB_THEME="/usr/share/grub/themes/breeze/theme.txt"' /mnt/etc/default/grub |& tee -a "${LOG}"
+  sed -i '/^#GRUB_THEME/c\GRUB_THEME="/usr/share/grub/themes/breeze/theme.txt"' /mnt/etc/default/grub |& tee -a "${LOG}"
+  sed -i '/^#GRUB_INIT_TUNE/c\GRUB_INIT_TUNE="480 440 1"' /mnt/etc/default/grub |& tee -a "${LOG}"
+
+  # Make the config
+  arch_chroot "grub-mkconfig -o /boot/grub/grub.cfg"
+}
+
+configure_sudo() {
+  print_info "Configuring sudo..."
+  echo '%wheel ALL=(ALL) ALL' >>/mnt/etc/sudoers.d/wheel
+  chmod 440 /mnt/etc/sudoers.d/wheel
+}
+
+configure_pacman() {
+  print_info "Configuring pacman..."
+  cp -v /mnt/etc/pacman.conf /mnt/etc/pacman.conf.orig
+
+  setup_repo() {
+    local _has_repo
+    _has_repo=$(grep -n "\[$1\]" /mnt/etc/pacman.conf | cut -f1 -d:)
+    if [[ -z $_has_repo ]]; then
+      echo -e "\n[$1]\nInclude = /etc/pacman.d/mirrorlist" >>/mnt/etc/pacman.conf
+    else
+      sed -i "${_has_repo}s/^#//" /mnt/etc/pacman.conf
+      _has_repo=$((_has_repo + 1))
+      sed -i "${_has_repo}s/^#//" /mnt/etc/pacman.conf
+    fi
+  }
+
+  sed -i '/^#Color/c\Color' /mnt/etc/pacman.conf |& tee -a "${LOG}"
+  sed -i '/^#TotalDownload/c\TotalDownload' /mnt/etc/pacman.conf |& tee -a "${LOG}"
+}
+
+pull_repo() {
+  print_info "Pulling repo"
+  mkdir -p /mnt/srv/recipes
+  arch_chroot "git clone https://github.com/ianepreston/recipes.git /srv/recipes"
+  arch_chroot "chown -R ansible:ansible /srv/recipes"
+}
+
+root_password() {
+  print_info "Setting up root account"
+
+  arch_chroot "echo -n 'root:$ROOT_PWD' | chpasswd -c SHA512"
+}
+
+setup_ansible_account() {
+  print_info "Setting up Ansible account"
+
+  arch_chroot "useradd -m -G wheel -s /bin/bash ansible"
+
+  arch_chroot "echo -n 'ansible:$ANSIBLE_PWD' | chpasswd -c SHA512"
+
+  arch_chroot "chfn ansible -f Ansible"
+
+  mkdir -p /mnt/home/ansible/.ssh
+  chmod 0700 /mnt/home/ansible/.ssh
+  arch_chroot "chown -R ansible:ansible /home/ansible/.ssh"
+
+  # Add user to the ssh
+  arch_chroot "usermod -a -G ssh ansible"
+}
+
+stamp_build() {
+  print_info "Stamping build"
+  # Stamp the build
+  mkdir -p /mnt/srv/provision-stamps
+  date --iso-8601=seconds | sudo tee /mnt/srv/provision-stamps/box_build_time
+  cp "${LOG}" /mnt/srv/provision-stamps/arch-install.log
+}
+
+copy_mirrorlist() {
+  print_info "Copying mirrorlist"
+
+  # Backup the original
+  rm -f "/mnt/etc/pacman.d/mirrorlist.orig"
+  mv -i "/mnt/etc/pacman.d/mirrorlist" "/mnt/etc/pacman.d/mirrorlist.orig"
+
+  # Copy ours over
+  mv -i "/etc/pacman.d/mirrorlist" "/mnt/etc/pacman.d/mirrorlist"
+
+  # Allow global read access (required for non-root yaourt execution)
+  chmod +r /mnt/etc/pacman.d/mirrorlist
+}
+
+wrap_up() {
+  print_title "INSTALL COMPLETED"
+  print_success "After reboot you can configure users, install software."
+  print_success "This script pulled its Github repo containing Ansible scripts to /srv/recipes."
+  print_success "Generally after rebooting I run Ansible to fully install and configure the machine."
+  blank_line
+}
+
+
