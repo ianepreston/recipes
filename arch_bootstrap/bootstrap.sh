@@ -372,6 +372,10 @@ setup_lvm() {
   print_info "Setting up LVM"
 
   # For real, we're wiping disks here, I hope you picked the right one
+  
+  print_info "Wiping install partition"
+  wipefs --all --force "${INSTALL_PARTITION}" || true
+  dd if=/dev/zero of="$INSTALL_PARTITION" bs=512 count=10 conv=notrunc
   pvcreate $INSTALL_PARTITION -ffy
   vgcreate "vg_main" $INSTALL_PARTITION
 
