@@ -188,3 +188,147 @@ check_boot_system() {
     UEFI=0
   fi
 }
+
+
+### Prompts and User Interaction
+
+ask_for_hostname() {
+  print_title "Hostname"
+  print_title_info "Pick a hostname for this machine.  Press enter to have a random hostname selected."
+  read -rp "Hostname [ex: archlinux]: " HOST_NAME
+  if [[ $HOST_NAME == "" ]]; then
+    HOST_NAME="arch-$((1 + RANDOM % 1000)).tts.lan"
+  fi
+}
+
+
+ask_for_main_disk() {
+  print_info "Determining main disk..."
+  devices_list=($(lsblk --nodeps --noheading --list --exclude 1,11,7 | awk '{print "/dev/" $1}'))
+
+  if [[ ${#devices_list[@]} == 1 ]]; then
+    device=${devices_list[0]}
+  else
+    print_title "Main Disk Selection"
+    print_title_info "Select which disk to use for the main installation (where root and boot will go)."
+    lsblk --nodeps --list --exclude 1,11,7 --output "name,size,type"
+    blank_line
+    PS3="Enter your option: "
+    echo -e "Select main drive:\n"
+    select device in "${devices_list[@]}"; do
+      if contains_element "${device}" "${devices_list[@]}"; then
+        break
+      else
+        invalid_option
+      fi
+    done
+  fi
+  MAIN_DISK=$device
+}
+
+ask_for_kernel_level() {
+  print_title "Kernel Selection"
+  print_title_info "Select which linux kernel to install. The LTS version is generally prefered and more stable."
+  version_list=("linux (default kernel)" "linux-lts (long term support, recommended)" "linux-hardened (security features)")
+  blank_line
+  PS3="Enter your option: "
+  echo -e "Select linux version to install\n"
+  select VERSION in "${version_list[@]}"; do
+    if contains_element "$VERSION" "${version_list[@]}"; then
+      if [ "linux (default kernel)" == "$VERSION" ]; then
+        KERNEL_VERSION="default"
+      elif [ "linux-lts (long term support, recommended)" == "$VERSION" ]; then
+        KERNEL_VERSION="lts"
+      elif [ "linux-hardened (security features)" == "$VERSION" ]; then
+        KERNEL_VERSION="hard"
+      fi
+      break
+    else
+      invalid_option
+    fi
+  done
+}
+
+ask_for_root_password() {
+  print_title "Root Password"
+  print_title_info "Set the password for the root account."
+
+  local was_set="false"
+
+  blank_line
+  while [[ $was_set == "false" ]]; do
+    local pwd1=""
+    local pwd2=""
+    read -srp "Root password: " pwd1
+    echo -e ""
+    read -srp "Once again: " pwd2
+
+    if [[ $pwd1 == "$pwd2" ]]; then
+      ROOT_PWD="$pwd1"
+      was_set="true"
+    else
+      blank_line
+      print_warning "They didn't match... try again."
+    fi
+  done
+}
+
+
+ask_for_ansible_password() {
+  print_title "Ansible Password"
+  print_title_info "This script sets up an account to run Ansible scripts.  Set the password of that account."
+
+  local was_set="false"
+
+  blank_line
+  while [[ $was_set == "false" ]]; do
+    local pwd1=""
+    local pwd2=""
+    read -srp "Ansible password: " pwd1
+    echo -e ""
+    read -srp "Once again: " pwd2
+
+    if [[ $pwd1 == "$pwd2" ]]; then
+      ANSIBLE_PWD="$pwd1"
+      was_set="true"
+    else
+      blank_line
+      print_warning "They didn't match... try again."
+    fi
+  done
+}
+
+### Installation/configuration functions
+
+configure_mirrorlist() {
+  print_info "Configuring repository mirrorlist"
+
+  pacman -Syy |& tee -a "${LOG}"
+
+  # Install reflector
+  pacman -S --noconfirm reflector |& tee -a "${LOG}"
+
+  print_status "    Backing up the original mirrorlist..."
+  rm -f "/etc/pacman.d/mirrorlist.orig" |& tee -a "${LOG}"
+  mv -i "/etc/pacman.d/mirrorlist" "/etc/pacman.d/mirrorlist.orig" |& tee -a "${LOG}"
+
+  print_status "    Rotating the new list into place..."
+  # Run reflector
+  /usr/bin/reflector --score 100 --fastest 20 --age 12 --sort rate --protocol https --save /etc/pacman.d/mirrorlist |& tee -a "${LOG}"
+
+  # Allow global read access (required for non-root yaourt execution)
+  chmod +r /etc/pacman.d/mirrorlist |& tee -a "${LOG}"
+
+  # Update one more time
+  pacman -Syy |& tee -a "${LOG}"
+}
+
+
+unmount_partitions() {
+  mounted_partitions=($(lsblk | grep /mnt | awk '{print $7}' | sort -r))
+  swapoff -a
+  for i in "${mounted_partitions[@]}"; do
+    umount "$i"
+  done
+}
+
