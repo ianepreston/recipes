@@ -371,11 +371,12 @@ find_install_partition() {
 setup_lvm() {
   print_info "Setting up LVM"
 
-  pvcreate $INSTALL_PARTITION
+  # For real, we're wiping disks here, I hope you picked the right one
+  pvcreate $INSTALL_PARTITION -ffy
   vgcreate "vg_main" $INSTALL_PARTITION
 
-  lvcreate -l 5%VG "vg_main" -n lv_var
-  lvcreate -l 45%VG "vg_main" -n lv_root
+  lvcreate -l 10%VG "vg_main" -n lv_var
+  lvcreate -l 40%VG "vg_main" -n lv_root
   lvcreate -l 40%VG "vg_main" -n lv_home
 }
 
@@ -659,7 +660,8 @@ check_boot_system
 ## Ask questions
 ask_for_hostname
 ask_for_main_disk
-ask_for_second_disk
+find_boot_partition
+find_install_partition
 ask_for_kernel_level
 ask_for_root_password
 ask_for_ansible_password
@@ -669,8 +671,6 @@ print_summary
 configure_mirrorlist
 
 unmount_partitions
-find_boot_partition
-find_install_partition
 setup_lvm
 format_partitions
 mount_partitions
