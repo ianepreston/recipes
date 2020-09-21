@@ -655,7 +655,6 @@ pause_function
 check_root
 check_archlinux
 check_boot_system
-check_connection
 
 ## Ask questions
 ask_for_hostname
