@@ -643,3 +643,60 @@ wrap_up() {
 }
 
 
+### Main flow
+loadkeys "$KEYMAP" # load the keymap
+
+print_title "https://github.com/ianepreston/recipes"
+print_title_info "Provision Arch -> Automated script to install my Arch systems."
+print_line
+print_status "Script can be cancelled at any time with CTRL+C"
+pause_function
+
+check_root
+check_archlinux
+check_boot_system
+check_connection
+
+## Ask questions
+ask_for_hostname
+ask_for_main_disk
+ask_for_second_disk
+ask_for_kernel_level
+ask_for_root_password
+ask_for_ansible_password
+
+print_summary
+
+configure_mirrorlist
+
+unmount_partitions
+find_boot_partition
+find_install_partition
+setup_lvm
+format_partitions
+mount_partitions
+
+install_base_system
+configure_keymap
+configure_fstab
+configure_hostname
+configure_timezone
+configure_clock
+configure_locale
+configure_mkinitcpio
+configure_systemd_swap
+
+install_bootloader
+configure_bootloader
+
+configure_sudo
+copy_mirrorlist
+configure_pacman
+
+root_password
+setup_ansible_account
+pull_repo
+stamp_build
+
+unmount_partitions
+wrap_up
