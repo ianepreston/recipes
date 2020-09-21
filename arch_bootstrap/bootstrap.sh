@@ -491,6 +491,11 @@ configure_timezone() {
   arch_chroot "systemctl enable systemd-timesyncd.service"
 }
 
+configure_clock() {
+  print_info "Configuring clock"
+  arch_chroot "hwclock --systohc --utc"
+}
+
 configure_locale() {
   print_info "Configuring locale"
   echo 'LANG="en_CA.UTF-8"' >/mnt/etc/locale.conf
