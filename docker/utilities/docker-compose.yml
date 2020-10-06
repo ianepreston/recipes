@@ -34,3 +34,20 @@ services:
         labels:
             com.centurylinklabs.watchtower.enable: "true"
         restart: unless-stopped
+    
+    resilio-sync:
+        image: linuxserver/resilio-sync
+        container_name: resilio-sync
+        environment:
+        - PUID
+        - PGID
+        - TZ
+        - UMASK_SET=022
+        volumes:
+        - ${CONFIG}/resilio:/config
+        - ${CONFIG}/resilio/downloads:/downloads
+        - /:/sync
+        ports:
+        - 8888:8888
+        - 55555:55555
+        restart: unless-stopped
