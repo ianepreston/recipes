@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+    jellyfin:
+        image: linuxserver/jellyfin:latest
+        network_mode: "host"
+        container_name: jellyfin
+        hostname: jellyfin
+        volumes:
+            - ${CONFIG}/jellyfin:/config
+            - ${DATA}/TV:/data/tvshows
+            - ${DATA}/Movies:/data/movies
+        environment:
+            - PGID
+            - PUID
+            - TZ
+        labels:
+            com.centurylinklabs.watchtower.enable: "true"
+        restart: unless-stopped
