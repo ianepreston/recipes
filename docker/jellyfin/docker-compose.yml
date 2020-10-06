@@ -7,7 +7,7 @@ services:
         container_name: jellyfin
         hostname: jellyfin
         volumes:
-            - /home/cornucrapia/jellyfin:/config
+            - ${CONFIG}/jellyfin:/config
             - ${DATA}/TV:/data/tvshows
             - ${DATA}/Movies:/data/movies
         environment:
