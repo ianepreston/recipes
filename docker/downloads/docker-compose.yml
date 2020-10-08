@@ -74,13 +74,13 @@ services:
         restart: unless-stopped
 
     mylar:
-        image: hotio/mylar3:latest
+        image: linuxserver/mylar3:latest
         container_name: mylar
         hostname: mylar
         ports:
             - "8090:8090"
         volumes:
-            - ${CONFIG}/mylar:/config/app
+            - ${CONFIG}/mylar:/config/mylar
             - ${DOWNLOAD}/complete:/downloads
             - ${DATA}/Comics:/comics
         environment:
