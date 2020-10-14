@@ -343,7 +343,7 @@ find_boot_partition() {
 
 find_install_partition() {
   print_title "Installation partition selection"
-  print_title_info "Select the partition to install Arch. This should be an already existing boot partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
+  print_title_info "Select the partition to install Arch. This should be an already existing partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
   partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep "[0-9]$"))
   blank_line
   PS3="Enter your option":
