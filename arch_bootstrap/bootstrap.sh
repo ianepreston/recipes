@@ -28,7 +28,6 @@ echo "Start log..." >>"${LOG}"
 # Flags and variables
 SYS_ARCH=$(uname -m) # Architecture (x86_64)
 UEFI=0
-XPINGS=0 # CONNECTION CHECK
 KEYMAP="us"
 
 # User provided variables
