@@ -33,9 +33,7 @@ KEYMAP="us"
 # User provided variables
 HOST_NAME="computer"
 KERNEL_VERSION="default"
-DUAL_DISK=0
 MAIN_DISK="/dev/sda"
-SECOND_DISK=""
 ROOT_PWD=""
 ANSIBLE_PWD=""
 
@@ -129,13 +127,7 @@ print_summary() {
   esac
 
   blank_line
-  if [[ $DUAL_DISK == 0 ]]; then
-    print_status "This is a single disk system so installation of all files will happen to $MAIN_DISK."
-  else
-    print_status "This is a dual disk system."
-    print_status "The main disk is $MAIN_DISK."
-    print_status "The second disk is $SECOND_DISK."
-  fi
+  print_status "This is a single disk system so installation of all files will happen to $MAIN_DISK."
 
   blank_line
   pause_function
