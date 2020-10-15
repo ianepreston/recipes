@@ -438,6 +438,7 @@ install_base_system() {
   # Install networking tools
   pacstrap /mnt dialog networkmanager networkmanager-openvpn |& tee -a "${LOG}"
   [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 5."
+  
   if [[ $WIFI == 1 ]]; then
     pacstrap /mnt iwd |& tee -a "${LOG}"
     [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Wifi"
