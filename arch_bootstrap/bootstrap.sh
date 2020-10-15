@@ -29,6 +29,7 @@ echo "Start log..." >>"${LOG}"
 SYS_ARCH=$(uname -m) # Architecture (x86_64)
 UEFI=0
 KEYMAP="us"
+WIFI=0
 
 # User provided variables
 HOST_NAME="computer"
@@ -180,6 +181,11 @@ check_boot_system() {
   fi
 }
 
+check_wifi() {
+  has_wifi=($(ls /sys/class/net | grep wlan))
+  if [ -n "$has_wifi" ]; then
+    WIFI=1
+}
 
 ### Prompts and User Interaction
 
@@ -429,8 +435,12 @@ install_base_system() {
   [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 4."
 
   # Install networking tools
-  pacstrap /mnt dialog networkmanager networkmanager-openvpn iw wireless_tools wpa_supplicant |& tee -a "${LOG}"
+  pacstrap /mnt dialog networkmanager networkmanager-openvpn |& tee -a "${LOG}"
   [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 5."
+  if [[ $WIFI == 1]]; then
+    pacstrap /mnt iwd |& tee -a "${LOG}"
+    [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Wifi"
+  fi
 
   # Remaining misc tools
   pacstrap /mnt reflector git gvim openssh ansible terminus-font systemd-swap |& tee -a "${LOG}"
