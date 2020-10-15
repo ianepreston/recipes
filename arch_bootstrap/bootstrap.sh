@@ -185,6 +185,9 @@ check_wifi() {
   has_wifi=($(ls /sys/class/net | grep wlan))
   if [ -n "$has_wifi" ]; then
     WIFI=1
+    print_status "Found WiFi, will install and enable WiFi Services"
+  else
+    print_status "No WiFi detected, WiFi services will not be installed or enabled"
   fi
 }
 
@@ -440,7 +443,7 @@ install_base_system() {
   [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 5."
   
   if [[ $WIFI == 1 ]]; then
-    pacstrap /mnt iwd |& tee -a "${LOG}"
+    pacstrap /mnt iwd wireless_tools |& tee -a "${LOG}"
     [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Wifi"
   fi
 
@@ -453,7 +456,9 @@ install_base_system() {
 
   # Set the NetworkManager & ssh services to be enabled
   arch_chroot "systemctl enable NetworkManager.service"
-  arch_chroot "systemctl enable wpa_supplicant.service"
+  if [[ $WIFI == 1 ]]; then
+    arch_chroot "systemctl enable iwd.service"
+  fi
   arch_chroot "systemctl enable sshd.service"
 }
 
@@ -668,6 +673,7 @@ pause_function
 check_root
 check_archlinux
 check_boot_system
+check_wifi
 
 ## Ask questions
 ask_for_hostname
