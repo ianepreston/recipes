@@ -3,4 +3,7 @@
 
 
 - name: Example from an Ansible Playbook
-  ping:
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - ping:
