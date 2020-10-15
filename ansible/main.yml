@@ -1,0 +1,6 @@
+# Run the provisioning job
+# Right now super basic, we'll expand it later
+
+
+- name: Example from an Ansible Playbook
+  ping:

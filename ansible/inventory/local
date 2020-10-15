@@ -1,9 +1,0 @@
-# Inventory: Local
-
-#  Each machine should be named in at least one of the role groups below.
-
-### Machine role
-[desktop_workstations]
-localhost ansible_connection=local
-
-[dev_workstations]

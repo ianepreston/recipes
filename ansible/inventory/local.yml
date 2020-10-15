@@ -1,0 +1,6 @@
+# Eventually I might need to add more roles so I can customize my builds
+# This is fine for now though
+
+all:
+    hosts:
+        localhost ansible_connection=local
