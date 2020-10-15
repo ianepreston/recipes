@@ -1,0 +1,188 @@
+# Created by https://www.gitignore.io/api/linux
+# Edit at https://www.gitignore.io/?templates=linux
+
+### Linux ###
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# .nfs files are created when an open file is removed but is still being accessed
+.nfs*
+
+# End of https://www.gitignore.io/api/linux
+
+# Created by https://www.gitignore.io/api/windows
+# Edit at https://www.gitignore.io/?templates=windows
+
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# End of https://www.gitignore.io/api/windows
+
+# Created by https://www.gitignore.io/api/macos
+# Edit at https://www.gitignore.io/?templates=macos
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# End of https://www.gitignore.io/api/macos
+
+# Created by https://www.gitignore.io/api/backup
+# Edit at https://www.gitignore.io/?templates=backup
+
+### Backup ###
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
+# End of https://www.gitignore.io/api/backup
+
+# Created by https://www.gitignore.io/api/vim
+# Edit at https://www.gitignore.io/?templates=vim
+
+### Vim ###
+# Swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Session
+Session.vim
+Sessionx.vim
+
+# Temporary
+.netrwhist
+*~
+
+# Auto-generated tag files
+tags
+
+# Persistent undo
+[._]*.un~
+
+# Coc configuration directory
+.vim
+
+# End of https://www.gitignore.io/api/vim
+
+# Created by https://www.gitignore.io/api/visualstudiocode
+# Edit at https://www.gitignore.io/?templates=visualstudiocode
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+# End of https://www.gitignore.io/api/visualstudiocode
+
+# Created by https://www.gitignore.io/api/vagrant
+# Edit at https://www.gitignore.io/?templates=vagrant
+
+### Vagrant ###
+# General
+.vagrant/
+
+# Log files (if you are creating logs in debug mode, uncomment this)
+# *.log
+
+### Vagrant Patch ###
+*.box
+
+# End of https://www.gitignore.io/api/vagrant
+
+# Created by https://www.gitignore.io/api/packer
+# Edit at https://www.gitignore.io/?templates=packer
+
+### Packer ###
+# Cache objects
+packer_cache/
+
+# For built boxes
+*.box
+
+# End of https://www.gitignore.io/api/packer
+
+# Created by https://www.gitignore.io/api/ansible
+# Edit at https://www.gitignore.io/?templates=ansible
+
+### Ansible ###
+*.retry
+
+# End of https://www.gitignore.io/api/ansible
+
+###### Custom project specific overrides ######
+# Log directory
+logs/
+
+# Ignore the private keys
+keys/
+!keys/id_ed25519_ansible.pub
+!keys/id_rsa_ansible.pub
+
+# ISO files for packer installations
+output-*/
