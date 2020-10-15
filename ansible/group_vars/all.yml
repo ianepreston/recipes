@@ -1,0 +1,17 @@
+---
+desired_time_zone: America/Edmonton
+
+default_groups:
+  - users
+
+users:
+  - name: 'ipreston'
+    comment: 'Ian Preston'
+    shell: '/bin/bash'
+    password: '$6$C2y1Sean$ufWb2GzOO/.nVBE2fVgMCmL.2BfnIiWCDJn6S7zThV5L0XcsJ4JLI17C2Qg6I.wPyB7Aj8npvnHP1xL3rX1co1'
+
+sudo_users:
+  - ipreston
+
+ssh_users:
+  - ipreston
