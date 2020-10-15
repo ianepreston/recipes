@@ -185,6 +185,7 @@ check_wifi() {
   has_wifi=($(ls /sys/class/net | grep wlan))
   if [ -n "$has_wifi" ]; then
     WIFI=1
+  fi
 }
 
 ### Prompts and User Interaction
