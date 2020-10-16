@@ -129,6 +129,11 @@ print_summary() {
 
   blank_line
   print_status "This is a single disk system so installation of all files will happen to $MAIN_DISK."
+  if [[ $WIFI == 1 ]]; then
+    print_status "Found WiFi, will install and enable WiFi Services"
+  else
+    print_status "No WiFi detected, WiFi services will not be installed or enabled"
+  fi
 
   blank_line
   pause_function
@@ -185,9 +190,6 @@ check_wifi() {
   has_wifi=($(ls /sys/class/net | grep wlan))
   if [ -n "$has_wifi" ]; then
     WIFI=1
-    print_status "Found WiFi, will install and enable WiFi Services"
-  else
-    print_status "No WiFi detected, WiFi services will not be installed or enabled"
   fi
 }
 
