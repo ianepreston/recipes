@@ -1,0 +1,16 @@
+---
+- name: Install ssh
+  pacman:
+    name: "openssh"
+    state: present
+
+- name: Add ssh group
+  group:
+    name: ssh
+    state: present
+
+- name: Start and enable the ssh service
+  service:
+    name: sshd.service
+    state: started
+    enabled: true

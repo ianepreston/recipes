@@ -1,0 +1,19 @@
+---
+- name: Install sudo
+  pacman:
+    name: "sudo"
+    state: present
+
+- name: Add wheel group
+  group:
+    name: wheel
+    state: present
+
+- name: Setup wheel group for sudo
+  template:
+    src: etc-sudoers.d--wheel.j2
+    dest: /etc/sudoers.d/wheel
+    owner: root
+    group: root
+    mode: 0440
+    backup: false

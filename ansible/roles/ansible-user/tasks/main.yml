@@ -1,0 +1,20 @@
+---
+- name: Add Ansible primary group
+  group:
+    name: "ansible"
+    state: present
+
+- name: Create Ansible users
+  user:
+    name: "ansible"
+    comment: "Ansible"
+    group: "ansible"
+    shell: "/bin/bash"
+    password: "$6$ulOKdSzpe3V17T1Z$YJ./hnTVfmIIWprKxWHxNNlZl3FJnKGDlXDxmyl2PTF/58bCRJvVhJ0Qunj9jhPJ00cF7vRlgZCuQKdgzE8qz1"
+    create_home: true
+
+- name: Add Ansible to the default groups
+  user:
+    name: "ansible"
+    groups: "users,wheel,ssh"
+    append: true

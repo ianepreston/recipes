@@ -1,0 +1,9 @@
+---
+- name: Setup the keymap and console
+  template:
+    src: etc--vconsole.conf.j2
+    dest: /etc/vconsole.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
