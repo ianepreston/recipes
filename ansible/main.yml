@@ -1,9 +1,23 @@
-# Run the provisioning job
-# Right now super basic, we'll expand it later
-
-
-- name: Example from an Ansible Playbook
-  hosts: localhost
-  gather_facts: false
-  tasks:
-    - ping:
+---
+# This first part just replicates what was done in the base install script
+# The exception is the SSH role.  It can potentially lock you out of a machine
+# by a misconfigured SSH config so it is run here.  If it causes issues in this
+# main script it can be removed.
+- name: Bootstrap Setup
+  hosts: all
+  become: true
+  vars_files:
+    - vars/bootstrap.yml
+  roles:
+    - hostname
+    - pacman-config
+    - upgrade
+    - install-applications
+    - bootloader-config
+    - sudo
+    - ansible-user
+    - vagrant-user
+    - keymap
+    - time
+    - locale
+    - ssh
