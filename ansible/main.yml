@@ -12,11 +12,10 @@
     - hostname
     - pacman-config
     - upgrade
-    - install-applications
     - bootloader-config
     - sudo
     - ansible-user
-    - vagrant-user
+    # - vagrant-user
     - keymap
     - time
     - locale
