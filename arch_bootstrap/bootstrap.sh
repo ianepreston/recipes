@@ -30,6 +30,7 @@ SYS_ARCH=$(uname -m) # Architecture (x86_64)
 UEFI=0
 KEYMAP="us"
 WIFI=0
+WIPE_DISK="wipe"
 
 # User provided variables
 HOST_NAME="computer"
@@ -229,6 +230,62 @@ ask_for_main_disk() {
   MAIN_DISK=$device
 }
 
+
+ask_for_disk_wipe() {
+  print_title "Fresh disk or not"
+  print_title_info "By default this script will install to existing partitions, but you have the option to just wipe the entire drive and install there"
+  wipe_options=("wipe" "keep")
+  blank_line
+  PS3="Enter your option: "
+  echo -e "Select wipe disk or keep partition layout\n"
+  select WIPE_OPT in "${wipe_options[@]}"; do
+    if contains_element "$WIPE_OPT" "${wipe_options[@]}"; then
+            WIPE_DISK="$WIPE_OPT"
+        break
+    else
+        invalid_option
+    fi
+    done
+}
+
+
+ask_for_boot_partition() {
+  print_title "Boot partition selection"
+  print_title_info "Select the partition to use for boot. This should be an already existing boot partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
+  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep "[0-9]$"))
+  blank_line
+  PS3="Enter your option":
+  lsblk $MAIN_DISK --output NAME,FSTYPE,LABEL,SIZE
+  echo -e "select a partition"
+  select partition in "${partition_list[@]}"; do
+    if contains_element "$partition" "${partition_list[@]}"; then
+      break
+    else
+      invalid_option
+    fi
+  done
+  BOOT_PARTITION=$partition
+}
+
+ask_for_install_partition() {
+  print_title "Installation partition selection"
+  print_title_info "Select the partition to install Arch. This should be an already existing partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
+  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep "[0-9]$"))
+  blank_line
+  PS3="Enter your option":
+  lsblk $MAIN_DISK --output NAME,FSTYPE,LABEL,SIZE
+  echo -e "select a partition"
+  select partition in "${partition_list[@]}"; do
+    if contains_element "$partition" "${partition_list[@]}"; then
+      break
+    else
+      invalid_option
+    fi
+  done
+  INSTALL_PARTITION=$partition
+}
+
+
 ask_for_kernel_level() {
   print_title "Kernel Selection"
   print_title_info "Select which linux kernel to install. The LTS version is generally prefered and more stable."
@@ -335,84 +392,57 @@ unmount_partitions() {
   done
 }
 
-find_boot_partition() {
-  print_title "Boot partition selection"
-  print_title_info "Select the partition to use for boot. This should be an already existing boot partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
-  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep "[0-9]$"))
-  blank_line
-  PS3="Enter your option":
-  lsblk $MAIN_DISK --output NAME,FSTYPE,LABEL,SIZE
-  echo -e "select a partition"
-  select partition in "${partition_list[@]}"; do
-    if contains_element "$partition" "${partition_list[@]}"; then
-      break
-    else
-      invalid_option
-    fi
-  done
-  BOOT_PARTITION=$partition
+wipe_disks() {
+  print_info "Wiping disks"
+
+  print_info "    Wiping main disk partitions"
+  wipefs --all --force "${MAIN_DISK}*" 2>/dev/null || true
+  wipefs --all --force "${MAIN_DISK}" || true
+  dd if=/dev/zero of="$MAIN_DISK" bs=512 count=10 conv=notrunc
+
+  partprobe 2>/dev/null || true
 }
 
-find_install_partition() {
-  print_title "Installation partition selection"
-  print_title_info "Select the partition to install Arch. This should be an already existing partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
-  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep "[0-9]$"))
-  blank_line
-  PS3="Enter your option":
-  lsblk $MAIN_DISK --output NAME,FSTYPE,LABEL,SIZE
-  echo -e "select a partition"
-  select partition in "${partition_list[@]}"; do
-    if contains_element "$partition" "${partition_list[@]}"; then
-      break
-    else
-      invalid_option
-    fi
-  done
-  INSTALL_PARTITION=$partition
-}
-
-setup_lvm() {
-  print_info "Setting up LVM"
-
-  # For real, we're wiping disks here, I hope you picked the right one
-  
-  print_info "Wiping install partition"
-  wipefs --all --force "${INSTALL_PARTITION}" || true
-  dd if=/dev/zero of="$INSTALL_PARTITION" bs=512 count=10 conv=notrunc
-  pvcreate $INSTALL_PARTITION -ffy
-  vgcreate "vg_main" $INSTALL_PARTITION
-
-  lvcreate -l 10%VG "vg_main" -n lv_var
-  lvcreate -l 40%VG "vg_main" -n lv_root
-  lvcreate -l 40%VG "vg_main" -n lv_home
+set_partition_points() {
+  if [[ $WIPE_DISK == "wipe" ]]; then
+    BOOT_PARTITION="${MAIN_DISK}1"
+    INSTALL_PARTITION="${MAIN_DISK}2"
+  else
+    ask_for_boot_partition
+    ask_for_install_partition
 }
 
 format_partitions() {
   print_info "Formatting partitions"
+  if [[ $WIPE_DISK == "wipe" ]]; then
+    if [[ $UEFI == 1 ]]; then
+      mkfs.vfat -F32 $BOOT_PARTITION
+    fi
+  fi
 
-  mkfs.ext4 "/dev/mapper/vg_main-lv_var"
-  mkfs.ext4 "/dev/mapper/vg_main-lv_root"
-  mkfs.ext4 "/dev/mapper/vg_main-lv_home"
+  mkfs.ext4 $INSTALL_PARTITION
 }
 
 mount_partitions() {
   print_info "Mounting partitions"
 
   # First load the root
-  mount -t ext4 -o defaults,rw,relatime,errors=remount-ro /dev/mapper/vg_main-lv_root /mnt
+  mount -t ext4 -o defaults,rw,relatime,errors=remount-ro $INSTALL_PARTITION /mnt
 
   # Create the paths for the other mounts
   mkdir -p "/mnt/boot/efi"
-  mkdir -p "/mnt/var"
-  mkdir -p "/mnt/home"
 
   if [[ $UEFI == 1 ]]; then
     mount -t vfat -o defaults,rw,relatime,utf8,errors=remount-ro "${MAIN_DISK}1" "/mnt/boot/efi"
   fi
+}
 
-  # Mount others
-  mount -t ext4 -o defaults,rw,relatime /dev/mapper/vg_main-lv_var /mnt/var
-  mount -t ext4 -o defaults,rw,relatime /dev/mapper/vg_main-lv_home /mnt/home
+setup_disk() {
+  if [[ $WIPE_DISK == "wipe" ]]; then
+    wipe_disks
+  fi
+  format_partitions
+  mount_partitions
 }
 
 install_base_system() {
@@ -680,8 +710,8 @@ check_wifi
 ## Ask questions
 ask_for_hostname
 ask_for_main_disk
-find_boot_partition
-find_install_partition
+ask_for_disk_wipe
+set_partition_points
 ask_for_kernel_level
 ask_for_root_password
 ask_for_ansible_password
@@ -691,9 +721,7 @@ print_summary
 configure_mirrorlist
 
 unmount_partitions
-setup_lvm
-format_partitions
-mount_partitions
+setup_disk
 
 install_base_system
 configure_keymap
