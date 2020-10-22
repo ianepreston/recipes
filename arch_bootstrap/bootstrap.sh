@@ -403,6 +403,28 @@ wipe_disks() {
   partprobe 2>/dev/null || true
 }
 
+create_partitions() {
+  print_info "Creating partitions"
+
+  print_status "    Main disk"
+  # Clear out the partitions
+  sgdisk -g --zap "$MAIN_DISK"
+
+  if [[ $UEFI == 1 ]]; then
+    # EFI partition (500mb)
+    sgdisk -g -n 1:2048:1026047 -c 1:"EFI" -t 1:ef00 "$MAIN_DISK"
+    # The rest of the disk is for Arch
+    sgdisk -g -n 2:1026048:0 -c 2:"ARCH" -t 2:8e00 "$MAIN_DISK"
+  else
+    # BIOS partition (1mb)
+    sgdisk -g -n 1:2048:4095 -c 1:"BIOS" -t 1:ef02 "$MAIN_DISK"
+    # The rest of the disk is for Arch
+    sgdisk -g -n 2:4096:0 -c 2:"ARCH" -t 2:8e00 "$MAIN_DISK"
+  fi
+
+  partprobe 2>/dev/null || true
+}
+
 set_partition_points() {
   if [[ $WIPE_DISK == "wipe" ]]; then
     BOOT_PARTITION="${MAIN_DISK}1"
@@ -441,6 +463,7 @@ mount_partitions() {
 setup_disk() {
   if [[ $WIPE_DISK == "wipe" ]]; then
     wipe_disks
+    create_partitions
   fi
   format_partitions
   mount_partitions
