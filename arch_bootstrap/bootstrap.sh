@@ -410,6 +410,7 @@ set_partition_points() {
   else
     ask_for_boot_partition
     ask_for_install_partition
+  fi
 }
 
 format_partitions() {
