@@ -1,0 +1,19 @@
+---
+package_set: "Terminal Applications"
+pacman_packages:
+  - biber # https://www.archlinux.org/packages/community/any/biber/
+  - texlive-most # https://wiki.archlinux.org/index.php/TeX_Live
+  - neovim # a tidier vim with some useful features
+  - mpd # is a lightweight music daemon.
+  - mpc # is a terminal interface for mpd.
+  - mpv # is the patrician's choice video player.
+  - ncmpcpp # a ncurses interface for music with multiple formats and a powerful tag editor.
+  - mopidy # https://www.archlinux.org/packages/community/any/mopidy/
+  - newsboat # is a terminal RSS client
+  - youtube-dl # can download any YouTube video (or playlist or channel) when given the link.
+  - zathura # is a PDF viewer with vim-like bindings
+  - zathura-pdf-mupdf # allows mupdf compatibility in Zathura
+  - poppler # manipulates .pdfs and gives .pdf previews and other .pdf functions.
+aur_packages:
+  - lf-git # https://github.com/gokcehan/lf
+  - mopidy-spotify # https://aur.archlinux.org/packages/mopidy-spotify/
