@@ -12,6 +12,7 @@
     - hostname
     - pacman-config
     - upgrade
+    - install-applications
     - bootloader-config
     - sudo
     - ansible-user
@@ -20,3 +21,22 @@
     - time
     - locale
     - ssh
+
+- name: Core System Setup
+  hosts: all
+  become: true
+  vars_files:
+    - vars/core-system-tools.yml
+  roles:
+    - installers
+    # # This role should be up in bootstrap, however it requires yay
+    # - role: virtualbox-guest
+    #   when: ansible_virtualization_type == "virtualbox"
+    #     and ansible_virtualization_role == "guest"
+    # These others belong here
+    - install-applications
+    - setup-users
+    - video-drivers
+    - audio
+    - networking
+    - security
