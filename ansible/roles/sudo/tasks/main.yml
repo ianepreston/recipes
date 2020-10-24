@@ -12,7 +12,7 @@
 - name: Setup wheel group for sudo
   template:
     src: etc-sudoers.d--wheel.j2
-    dest: /etc/sudoers.d/wheel
+    dest: /etc/sudoers.d/01_wheel
     owner: root
     group: root
     mode: 0440
