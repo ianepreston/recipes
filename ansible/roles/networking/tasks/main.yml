@@ -1,0 +1,25 @@
+---
+- name: Install Networking Tools
+  pacman:
+    name:
+      - firewalld
+      - krb5
+      - nfs-utils
+      - util-linux
+    state: present
+
+- name: Enable the Firewalld service
+  service:
+    name: firewalld.service
+    enabled: true
+
+- name: Enable the NFS Client
+  service:
+    name: nfs-client.target
+    enabled: true
+
+# This isn't strictly networking based, but it doesn't fit in any other role
+- name: Enable SSD Trim Timer
+  service:
+    name: fstrim.timer
+    enabled: true

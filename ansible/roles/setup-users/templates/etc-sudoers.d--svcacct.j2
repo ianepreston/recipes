@@ -1,0 +1,8 @@
+##
+## {{ ansible_managed }}
+##
+
+Defaults:vagrant !requiretty
+
+## Allow the vagrant user to execute any command WITHOUT a password
+svcacct ALL=(ALL) NOPASSWD: ALL

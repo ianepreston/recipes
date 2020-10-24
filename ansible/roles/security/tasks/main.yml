@@ -1,0 +1,11 @@
+---
+- name: Install Security Tools
+  pacman:
+    name:
+      - apparmor
+    state: present
+
+- name: Enable Apparmor Service
+  service:
+    name: apparmor.service
+    enabled: true
