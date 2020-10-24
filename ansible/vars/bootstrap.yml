@@ -6,6 +6,7 @@ pacman_packages:
   - linux-firmware
   - lvm2
   - dosfstools
+  - ntfs-3g
   - mtools
   - gptfdisk
   - dialog

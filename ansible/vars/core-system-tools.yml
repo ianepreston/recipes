@@ -1,0 +1,117 @@
+---
+package_set: "Core System Tools"
+pacman_packages:
+
+  # Basic system stuff
+  - man # https://linux.die.net/man/
+  - words # https://en.wikipedia.org/wiki/Words_(Unix)
+  - gnu-free-fonts
+  - rhash # https://www.archlinux.org/packages/extra/x86_64/rhash/
+  - aspell # https://wiki.archlinux.org/index.php/Language_checking
+  - aspell-en # https://wiki.archlinux.org/index.php/Language_checking
+  - mlocate # https://wiki.archlinux.org/index.php/Locate
+  - ed # https://www.gnu.org/software/ed/ed.html
+  - hunspell # https://www.archlinux.org/packages/extra/x86_64/hunspell/
+  - hunspell-en_CA # https://www.archlinux.org/packages/extra/any/hunspell-en_CA/
+  - cronie # https://wiki.archlinux.org/index.php/cron
+  # - gd # https://www.linuxjournal.com/article/8799
+  # - logrotate # https://wiki.archlinux.org/index.php/logrotate
+  # - libmicrodns # https://www.archlinux.org/packages/extra/x86_64/libmicrodns/
+  # - zerotier-one # https://wiki.archlinux.org/index.php/ZeroTier
+
+  # Shells
+  - dash # https://wiki.archlinux.org/index.php/Dash
+  - zsh # https://wiki.archlinux.org/index.php/zsh
+  - zsh-completions # https://wiki.archlinux.org/index.php/zsh#Command_completion
+  - tmux # https://wiki.archlinux.org/index.php/tmux
+
+
+  # Compression
+  - atool # https://www.archlinux.org/packages/community/any/atool/
+  - lzip # https://www.archlinux.org/packages/community/x86_64/lzip/
+  - lzop # https://www.archlinux.org/packages/extra/x86_64/lzop/
+  - lrzip # https://wiki.archlinux.org/index.php/lrzip
+  - unrar # https://www.archlinux.org/packages/extra/x86_64/unrar/
+  - unzip # https://wiki.archlinux.org/index.php/Archiving_and_compression
+  - squashfs-tools # https://en.wikipedia.org/wiki/SquashFS
+  - zip # https://wiki.archlinux.org/index.php/Archiving_and_compression
+  # - p7zip # https://wiki.archlinux.org/index.php/P7zip
+  # - rpmextract
+  # - cabextract # https://www.archlinux.org/packages/community/x86_64/cabextract/
+  # - unshield # https://www.archlinux.org/packages/community/x86_64/unshield/
+  # - lhasa # https://www.archlinux.org/packages/community/x86_64/lhasa/
+  # - cpio # https://www.archlinux.org/packages/extra/x86_64/cpio/
+
+  # Hardware drivers etc
+  - amd-ucode # https://wiki.archlinux.org/index.php/Microcode
+  - intel-ucode # https://wiki.archlinux.org/index.php/Microcode
+  # - crda # https://linux.die.net/man/8/crda
+
+  # Files and file systems
+  - exfat-utils # https://www.archlinux.org/packages/community/x86_64/exfat-utils/
+  - cifs-utils # https://www.archlinux.org/packages/extra/x86_64/cifs-utils/
+  - nfs-utils # https://www.archlinux.org/packages/core/x86_64/nfs-utils/
+  - sshfs # https://wiki.archlinux.org/index.php/SSHFS
+  - udisks2 # https://wiki.archlinux.org/index.php/udisks
+  - hdparm # https://wiki.archlinux.org/index.php/Hdparm
+  - rsync
+  - samba
+  - libnfs
+
+  # Shell tools
+  # - bash-completion # https://github.com/scop/bash-completion
+
+  # Coding
+  - python-pip
+  - cmake # https://www.archlinux.org/packages/extra/x86_64/cmake/
+  - extra-cmake-modules # https://github.com/KDE/extra-cmake-modules
+  # - mpdecimal # https://www.archlinux.org/packages/extra/x86_64/mpdecimal/
+  # - mcpp # https://www.archlinux.org/packages/extra/x86_64/mcpp/
+  # - tcl # https://www.archlinux.org/packages/extra/x86_64/tcl/
+  # - tk # https://www.archlinux.org/packages/extra/x86_64/tk/
+  # - libusb-compat # https://libusb.info/
+  # - pcsclite # https://www.archlinux.org/packages/community/x86_64/pcsclite/
+  # - netpbm # https://www.archlinux.org/packages/extra/x86_64/netpbm/
+  # - psutils # https://www.archlinux.org/packages/extra/any/psutils/
+  # - libevent # https://www.archlinux.org/packages/core/x86_64/libevent/
+  # - ruby # https://wiki.archlinux.org/index.php/Ruby
+  # - ruby-docs # https://wiki.archlinux.org/index.php/Ruby
+  # - lua # https://wiki.archlinux.org/index.php/Lua
+  # - libfido2 # https://www.archlinux.org/packages/extra/x86_64/libfido2/
+  # - sshpass # https://www.archlinux.org/packages/community/x86_64/sshpass/
+  # - acme-tiny # https://www.archlinux.org/packages/community/any/acme-tiny/
+  # - libisoburn # https://www.archlinux.org/packages/extra/x86_64/libisoburn/
+  # - freeglut # https://www.archlinux.org/packages/extra/x86_64/freeglut/
+  # - clang # https://wiki.archlinux.org/index.php/clang
+  # - llvm # https://wiki.archlinux.org/index.php/LLVM
+  # - openmp # https://www.archlinux.org/packages/extra/x86_64/openmp/
+  # - gcc-fortran # https://www.archlinux.org/packages/core/x86_64/gcc-fortran/
+  # - boost-libs # https://www.archlinux.org/packages/extra/x86_64/boost-libs/
+  # - go
+  # - go-tools
+  # - libuv # https://www.archlinux.org/packages/extra/x86_64/libuv/
+  # - libappimage # https://www.archlinux.org/packages/extra/x86_64/libappimage/
+  # - protobuf #  https://www.archlinux.org/packages/extra/x86_64/protobuf/
+  # - live-media # https://www.archlinux.org/packages/extra/x86_64/live-media/
+  # - libmediawiki # https://www.archlinux.org/packages/extra/x86_64/libmediawiki/
+  # - chmlib # https://www.archlinux.org/packages/extra/x86_64/chmlib/
+  # - unarchiver # https://www.archlinux.org/packages/community/x86_64/unarchiver/
+  # - transcode # https://www.archlinux.org/packages/community/x86_64/transcode/
+  # - gnuplot
+  # - flite # https://www.archlinux.org/packages/community/x86_64/flite/
+  # - speech-dispatcher # https://www.archlinux.org/packages/extra/x86_64/speech-dispatcher/
+  # - festival # https://wiki.archlinux.org/index.php/Festival
+  # - espeak-ng
+  # - espeak-ng-espeak
+  # - libquicktime # https://www.archlinux.org/packages/community/x86_64/libquicktime/
+  # - yasm # https://www.archlinux.org/packages/extra/x86_64/yasm/
+  # - nodejs
+  # - npm
+
+  # Documents
+  # - biber # https://www.archlinux.org/packages/community/any/biber/
+  # - texlive-most # https://wiki.archlinux.org/index.php/TeX_Live
+aur_packages:
+  - rcm # https://aur.archlinux.org/packages/rcm
+  # - jdk11-adoptopenjdk
+  # - jdk-adoptopenjdk
