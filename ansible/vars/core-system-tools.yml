@@ -65,6 +65,8 @@ pacman_packages:
   - python-pip
   - cmake # https://www.archlinux.org/packages/extra/x86_64/cmake/
   - extra-cmake-modules # https://github.com/KDE/extra-cmake-modules
+  - go # Needed for Yay
+  - go-tools
   # - mpdecimal # https://www.archlinux.org/packages/extra/x86_64/mpdecimal/
   # - mcpp # https://www.archlinux.org/packages/extra/x86_64/mcpp/
   # - tcl # https://www.archlinux.org/packages/extra/x86_64/tcl/
@@ -87,8 +89,6 @@ pacman_packages:
   # - openmp # https://www.archlinux.org/packages/extra/x86_64/openmp/
   # - gcc-fortran # https://www.archlinux.org/packages/core/x86_64/gcc-fortran/
   # - boost-libs # https://www.archlinux.org/packages/extra/x86_64/boost-libs/
-  # - go
-  # - go-tools
   # - libuv # https://www.archlinux.org/packages/extra/x86_64/libuv/
   # - libappimage # https://www.archlinux.org/packages/extra/x86_64/libappimage/
   # - protobuf #  https://www.archlinux.org/packages/extra/x86_64/protobuf/
