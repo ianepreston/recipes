@@ -3,7 +3,7 @@ package_set: "Core System Tools"
 pacman_packages:
 
   # Basic system stuff
-  - man # https://linux.die.net/man/
+  - man-db # https://linux.die.net/man/
   - words # https://en.wikipedia.org/wiki/Words_(Unix)
   - gnu-free-fonts
   - rhash # https://www.archlinux.org/packages/extra/x86_64/rhash/
