@@ -14,6 +14,7 @@ pacman_packages:
   - zathura # is a PDF viewer with vim-like bindings
   - zathura-pdf-mupdf # allows mupdf compatibility in Zathura
   - poppler # manipulates .pdfs and gives .pdf previews and other .pdf functions.
+  - neofetch # lists system specs
 aur_packages:
   - lf-git # https://github.com/gokcehan/lf
   - mopidy-spotify # https://aur.archlinux.org/packages/mopidy-spotify/

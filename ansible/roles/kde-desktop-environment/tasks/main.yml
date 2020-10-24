@@ -1,0 +1,93 @@
+---
+- name: Install KDE
+  pacman:
+    name:
+      # KDE Core
+      - phonon-qt5-gstreamer
+      - python-pyqt5
+      - plasma-meta
+      - plasma-wayland-session
+      - sddm
+      # Basics missing and optional packages
+      - qt5-tools
+      - qt5-webkit
+      - qt5-xmlpatterns
+      - kio-extras
+      - kdoctools
+      - kio-fuse
+      - kimageformats
+      - qt5-imageformats
+      - karchive
+      - packagekit-qt5
+      - qt5-virtualkeyboard
+      - noto-fonts-emoji
+      - noto-fonts-extra
+      - qt5-charts
+      - appmenu-gtk-module
+      - fwupd
+      - pipewire-jack
+      - pipewire-pulse
+      - sddm-kcm
+      - kdeconnect
+      - system-config-printer
+      - gnome-keyring
+      - colord-kde
+      - ttf-dejavu
+      - ttf-liberation
+      - phonon-qt5-vlc
+      - libappindicator-gtk3
+      - libktorrent
+      - nm-connection-editor
+    state: present
+
+# These are apps I would likely NOT install on a non-KDE system but are nice to
+# have in a KDE system
+- name: Install KDE Apps
+  pacman:
+    name:
+      - kde-accessibility-meta
+      - kde-system-meta
+      - kde-graphics-meta
+      - kde-utilities-meta
+      - ffmpegthumbs
+      - kamoso
+      - kdenetwork-filesharing
+      - kget
+      - krdc
+      - krfb
+      - dolphin-plugins
+      - kompare
+      - partitionmanager
+      - freerdp
+    state: present
+
+- name: Install KDE AUR Tools
+  become: false
+  yay:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - systemd-kcm
+    - bcompare
+    - bcompare-kde5
+
+- name: Enable SDDM
+  service:
+    name: sddm.service
+    enabled: true
+
+- name: Setup Firewall rule for KDEConnect
+  firewalld:
+    service: kdeconnect
+    state: enabled
+    permanent: yes
+    zone: home
+
+- name: Setup SDDM config
+  template:
+    src: etc--sddm.conf.j2
+    dest: /etc/sddm.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true

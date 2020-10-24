@@ -48,3 +48,35 @@
     - vars/terminal-apps.yml
   roles:
     - install-applications
+
+- name: KDE Desktop Environment Setup
+  hosts: all
+  become: true
+  roles:
+    - xorg-install
+    - kde-desktop-environment
+
+- name: Shared Desktop Applications
+  hosts: all
+  become: true
+  vars_files:
+    - vars/desktop-apps.yml
+  roles:
+    - install-applications
+
+- name: Install Fonts
+  hosts: all
+  become: true
+  vars_files:
+    - vars/fonts.yml
+  roles:
+    - install-applications
+
+- name: VM Applications
+  hosts: all
+  become: true
+  vars_files:
+    - vars/vm-applications.yml
+  roles:
+    - role: install-applications
+      when: ansible_virtualization_role != "guest"

@@ -1,0 +1,48 @@
+---
+package_set: 'Fonts'
+pacman_packages:
+  - noto-fonts
+  - noto-fonts-emoji
+  - noto-fonts-extra
+  - ttf-joypixels
+  - ttf-cascadia-code
+  - ttf-jetbrains-mono
+  - ttf-fira-mono
+  - ttf-fira-code
+  - ttf-fira-sans
+  - ttf-hack
+  - gnu-free-fonts
+  - ttf-caladea
+  - ttf-carlito
+  - ttf-croscore
+  - ttf-font-awesome
+  - ttf-linux-libertine
+#  - ttf-droid
+#  - ttf-roboto
+#  - ttf-roboto-mono
+#  - ttf-dejavu
+#  - ttf-ubuntu-font-family
+aur_packages:
+  #  - ttf-ms-win10
+  - nerd-fonts-arimo
+  - nerd-fonts-cascadia-code
+  - nerd-fonts-hack
+  - nerd-fonts-jetbrains-mono
+  - nerd-fonts-noto
+#  - nerd-fonts-noto-sans-mono
+#  - nerd-fonts-roboto-mono
+#  - nerd-fonts-ubuntu-mono
+#  - nerd-fonts-victor-mono
+#  - nerd-fonts-dejavu-complete
+#  - nerd-fonts-droid-sans-mono
+#  - nerd-fonts-fira-code
+#  - nerd-fonts-fira-mono
+#  - otf-crimson-text
+#  - otf-font-awesome-4
+#  - otf-font-awesome-5-free
+#  - otf-hasklig
+#  - ttf-font-awesome-4
+#  - ttf-font-awesome-pro
+#  - ttf-fork-awesome
+#  - ttf-material-design-icons
+#  - ttf-weather-icons
