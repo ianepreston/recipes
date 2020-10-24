@@ -18,3 +18,12 @@
     name: "ansible"
     groups: "users,wheel,ssh"
     append: true
+
+- name: Setup ansible sudo configuration
+  template:
+    src: etc-sudoers.d--ansible.j2
+    dest: /etc/sudoers.d/99_ansible
+    owner: root
+    group: root
+    mode: 0440
+    backup: false
