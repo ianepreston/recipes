@@ -491,7 +491,7 @@ install_base_system() {
   esac
 
   # Install file system tools
-  pacstrap /mnt lvm2 dosfstools mtools gptfdisk |& tee -a "${LOG}"
+  pacstrap /mnt lvm2 dosfstools mtools gptfdisk ntfs-3g |& tee -a "${LOG}"
   [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 4."
 
   # Install networking tools
