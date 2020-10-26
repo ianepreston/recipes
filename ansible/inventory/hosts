@@ -1,1 +1,8 @@
+[gnome_desktop]
 macarch
+
+[kde_desktop]
+
+[desktops:children]
+gnome_desktop
+kde_desktop
