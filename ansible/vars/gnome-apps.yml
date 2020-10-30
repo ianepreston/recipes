@@ -1,0 +1,74 @@
+---
+package_set: "Gnome Applications"
+pacman_packages:
+  - dconf-editor
+  - gnome-tweaks
+  - baobab # 3.38.0-1 A graphical directory tree analyzer 2020-09-27 
+  # - cheese # 3.38.0-1 Take photos and videos with your webcam, with fun graphical effects 2020-10-08 
+  # - eog # 3.38.0-1 Eye of Gnome: An image viewing and cataloging program 2020-10-05 
+  # - epiphany # 3.38.1-1 A GNOME web browser based on the WebKit rendering engine 2020-10-06 
+  - evince # 3.38.0+1+gffa3fd98-1 Document viewer (PDF, Postscript, djvu, tiff, dvi, XPS, SyncTex support with gedit, comics books (cbr,cbz,cb7 and cbt)) 2020-10-05 
+  - file-roller # 3.38.0-1 Create and modify archives 2020-09-27 
+  - gdm # 3.38.1-3 Display manager and login screen 2020-10-27 
+  # - gedit # 3.38.0-1 GNOME Text Editor 2020-10-05 
+  - gnome-backgrounds # 3.38.0-1 Background images and data for GNOME 2020-09-27 
+  # - gnome-books # 3.34.0+21+g4d34d109-1 Access and organize your e-books on GNOME 2020-03-08 
+  # - gnome-boxes # 3.38.1-2 Simple GNOME application to access remote or virtual systems 2020-10-26 
+  - gnome-calculator # 3.38.1-1 GNOME Scientific calculator 2020-10-05 
+  - gnome-calendar # 3.38.1-1 Simple and beautiful calendar application designed to perfectly fit the GNOME desktop 2020-10-05 
+  # - gnome-characters # 3.34.0+9+geeab5f2-1 A character map application 2020-10-16 
+  - gnome-clocks # 3.38.0-1 Clocks applications for GNOME 2020-10-05 
+  - gnome-color-manager # 3.36.0-1 GNOME Color Profile Tools 2020-04-01 
+  # - gnome-contacts # 3.38-1 Contacts Manager for GNOME 2020-10-05 
+  - gnome-control-center # 3.38.1-1 GNOME's main interface to configure various aspects of the desktop 2020-10-05 
+  - gnome-disk-utility # 3.38.0-1 Disk Management Utility for GNOME 2020-09-26 
+  # - gnome-documents # 3.34.0+6+g966b04ec-1 A document manager application for GNOME 2020-03-08 
+  - gnome-font-viewer # 3.34.0+27+g5ffd1ba-1 A font viewer utility for GNOME 2020-03-08 
+  - gnome-getting-started-docs # 3.36.2-1 Help a new user get started in GNOME 2020-04-26 
+  - gnome-keyring # 1:# 3.36.0-1 Stores passwords and encryption keys 2020-03-11 
+  - gnome-logs # 3.36.0-1 A log viewer for the systemd journal 2020-05-14 
+  # - gnome-maps # 3.38.1.1-1 A simple GNOME 3 maps application 2020-10-08 
+  - gnome-menus # 3.36.0-1 GNOME menu specifications 2020-03-11 
+  # - gnome-music 1:# 3.38.1-1 Music player and management application 2020-10-05 
+  # - gnome-photos # 3.38.0-1 Access, organize, and share your photos on GNOME 2020-10-05 
+  # - gnome-remote-desktop # 0.1.9-1 GNOME Remote Desktop server 2020-09-09 
+  - gnome-screenshot # 3.38.0-1 Take pictures of your screen 2020-10-05 
+  - gnome-session # 3.38.0-1 The GNOME Session Handler 2020-10-05 
+  - gnome-settings-daemon # 3.38.1-1 GNOME Settings Daemon 2020-10-12 
+  - gnome-shell #1: 3.38.1-1 Next generation desktop shell 2020-10-05 
+  - gnome-shell-extensions # 3.38.1-1 Extensions for GNOME shell, including classic mode 2020-10-05 
+  # - gnome-software # 3.38.0-2 GNOME Software Tools 2020-10-05 
+  - gnome-system-monitor # 3.38.0-1 View current processes and monitor system state 2020-09-27 
+  # - gnome-terminal # 3.38.1-2 The GNOME Terminal Emulator 2020-10-27 
+  - gnome-themes-extra # 3.28-2 Extra Themes for GNOME Applications 2020-05-11 
+  - gnome-user-docs # 3.38.1-1 User documentation for GNOME 2020-10-05 
+  - gnome-user-share # 3.34.0-2 Easy to use user-level file sharing for GNOME 2020-05-21 
+  - gnome-video-effects # 0.5.0+4+g9554041-2 Collection of GStreamer effects for GNOME 2020-05-21 
+  - gnome-weather # 3.36.1-1 Access current weather conditions and forecasts 2020-04-10 
+  - grilo-plugins #1:# 0.3.12-2 A collection of plugins for the Grilo framework 2020-10-05 
+  - gvfs # 1.46.1-1 Virtual filesystem implementation for GIO 2020-10-05 
+  # - gvfs-afc # 1.46.1-1 Virtual filesystem implementation for GIO (AFC backend; Apple mobile devices) 2020-10-05 
+  - gvfs-goa # 1.46.1-1 Virtual filesystem implementation for GIO (Gnome Online Accounts backend; cloud storage) 2020-10-05 
+  - gvfs-google # 1.46.1-1 Virtual filesystem implementation for GIO (Google Drive backend) 2020-10-05 
+  - gvfs-gphoto2 # 1.46.1-1 Virtual filesystem implementation for GIO (gphoto2 backend; PTP camera, MTP media player) 2020-10-05 
+  - gvfs-mtp # 1.46.1-1 Virtual filesystem implementation for GIO (MTP backend; Android, media player) 2020-10-05 
+  - gvfs-nfs # 1.46.1-1 Virtual filesystem implementation for GIO (NFS backend) 2020-10-05 
+  - gvfs-smb # 1.46.1-1 Virtual filesystem implementation for GIO (SMB/CIFS backend; Windows client) 2020-10-05 
+  - mutter # 3.38.1-1 A window manager for GNOME 2020-10-05 
+  - nautilus # 3.38.1-1 Default file manager for GNOME 2020-10-05 
+  - networkmanager # 1.26.4-1 Network connection manager and user applications 2020-10-14 
+  # - orca # 3.38.0-1 Screen reader for individuals who are blind or visually impaired 2020-09-27 
+  # - rygel # 0.40.0-1 UPnP AV MediaServer and MediaRenderer that allows you to easily share audio, video and pictures, and control of media player on your home network 2020-10-05 
+  # - simple-scan # 3.38.1-1 Simple scanning utility 2020-10-02 
+  - sushi # 3.38.0-1 A quick previewer for Nautilus 2020-10-22 
+  # - totem # 3.38.0-1 Movie player for the GNOME desktop based on GStreamer 2020-10-05 
+  # - tracker # 2.3.6-2 Desktop-neutral user information store, search tool and indexer 2020-10-19 
+  # - tracker3 # 3.0.1-1 Desktop-neutral user information store, search tool and indexer 2020-10-05 
+  # - tracker3-miners # 3.0.1-1 Collection of data extractors for Tracker/Nepomuk 2020-10-05 
+  # - tracker-miners # 2.3.5-2 Collection of data extractors for Tracker/Nepomuk 2020-10-05 
+  # - vino # 3.22.0+72+g3fe1f12-1 A VNC server for the GNOME desktop 2020-06-20 
+  - xdg-user-dirs-gtk # 0.10+9+g5b7efc6-3 Creates user dirs and asks to relocalize them 2020-05-19 
+  - yelp # 3.38.1-1 Get help with GNOME 2020-10-03 
+
+aur_packages:
+  - gnome-shell-extension-material-shell-git
