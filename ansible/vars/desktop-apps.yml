@@ -10,4 +10,5 @@ aur_packages:
   # for now have to run this first: curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import -
   - spotify # https://wiki.archlinux.org/index.php/spotify#Installation
   - visual-studio-code-bin
+  - lastpass
 
