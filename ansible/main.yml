@@ -3,87 +3,88 @@
 # The exception is the SSH role.  It can potentially lock you out of a machine
 # by a misconfigured SSH config so it is run here.  If it causes issues in this
 # main script it can be removed.
-# - name: Bootstrap Setup
-#   hosts: all
-#   become: true
-#   vars_files:
-#     - vars/bootstrap.yml
-#   roles:
-#     - hostname
-#     - pacman-config
-#     - upgrade
-#     - install-applications
-#     - bootloader-config
-#     - sudo
-#     - ansible-user
-#     # - vagrant-user
-#     - keymap
-#     - time
-#     - locale
-#     - ssh
+- name: Bootstrap Setup
+  hosts: all
+  become: true
+  vars_files:
+    - vars/bootstrap.yml
+  roles:
+    - hostname
+    - pacman-config
+    - upgrade
+    - install-applications
+    - bootloader-config
+    - sudo
+    - ansible-user
+    # - vagrant-user
+    - keymap
+    - time
+    - locale
+    - ssh
 
-# - name: Core System Setup
-#   hosts: all
-#   become: true
-#   vars_files:
-#     - vars/core-system-tools.yml
-#   roles:
-#     - installers
-#     # # This role should be up in bootstrap, however it requires yay
-#     # - role: virtualbox-guest
-#     #   when: ansible_virtualization_type == "virtualbox"
-#     #     and ansible_virtualization_role == "guest"
-#     # These others belong here
-#     - install-applications
-#     - setup-users
-#     - video-drivers
-#     - audio
-#     - networking
-#     - security
+- name: Core System Setup
+  hosts: all
+  become: true
+  vars_files:
+    - vars/core-system-tools.yml
+  roles:
+    - installers
+    # # This role should be up in bootstrap, however it requires yay
+    # - role: virtualbox-guest
+    #   when: ansible_virtualization_type == "virtualbox"
+    #     and ansible_virtualization_role == "guest"
+    # These others belong here
+    - install-applications
+    - setup-users
+    - video-drivers
+    - audio
+    - networking
+    - security
 
-# - name: Terminal Applications
-#   hosts: desktops
-#   become: true
-#   vars_files:
-#     - vars/terminal-apps.yml
-#   roles:
-#     - install-applications
+- name: Terminal Applications
+  hosts: desktops
+  become: true
+  vars_files:
+    - vars/terminal-apps.yml
+  roles:
+    - install-applications
 
-# - name: KDE Desktop Environment Setup
-#   hosts: kde-desktop
-#   become: true
-#   roles:
-#     - xorg-install
-#     - kde-desktop-environment
-  
-- name: GNOME Desktop Environment Setup
-  hosts: gnome_desktop
+- name: KDE Desktop Environment Setup
+  hosts: kde_desktop
   become: true
   roles:
-    # - xorg-install
-    - gnome-desktop-environment
+    - xorg-install
+    - kde-desktop-environment
+  
+- name: GNOME Desktop Apps
+  hosts: gnome_desktop
+  become: true
+  vars_files:
+    - vars/gnome-apps.yml
+  roles:
+    - install-applications
 
-# - name: Shared Desktop Applications
-#   hosts: desktops
-#   become: true
-#   vars_files:
-#     - vars/desktop-apps.yml
-#   roles:
-#     - install-applications
+- name: Shared Desktop Applications
+  hosts: desktops
+  become: true
+  vars_files:
+    - vars/desktop-apps.yml
+  roles:
+    - install-applications
 
-# - name: Install Fonts
-#   hosts: all
-#   become: true
-#   vars_files:
-#     - vars/fonts.yml
-#   roles:
-#     - install-applications
+- name: Install Fonts
+  hosts: all
+  become: true
+  vars_files:
+    - vars/fonts.yml
+  roles:
+    - install-applications
 
-# - name: VM Applications
-#   hosts: all
-#   become: true
-#   vars_files:
-#     - vars/vm-applications.yml
-#   roles:
-#     - role: install-applications
-#       when: ansible_virtualization_role != "guest"
+- name: VM Applications
+  hosts: all
+  become: true
+  vars_files:
+    - vars/vm-applications.yml
+  roles:
+    - role: install-applications
+      when: ansible_virtualization_role != "guest"
