@@ -15,6 +15,7 @@ pacman_packages:
   - zathura-pdf-mupdf # allows mupdf compatibility in Zathura
   - poppler # manipulates .pdfs and gives .pdf previews and other .pdf functions.
   - neofetch # lists system specs
+  - pyenv # https://www.archlinux.org/packages/community/any/pyenv/
 aur_packages:
   - lf-git # https://github.com/gokcehan/lf
   - mopidy-spotify # https://aur.archlinux.org/packages/mopidy-spotify/
