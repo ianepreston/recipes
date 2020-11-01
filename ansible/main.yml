@@ -49,6 +49,12 @@
   roles:
     - install-applications
 
+- name: Install Miniconda
+  hosts: desktops
+  become: true
+  roles:
+    - miniconda
+
 - name: KDE Desktop Environment Setup
   hosts: kde_desktop
   become: true
