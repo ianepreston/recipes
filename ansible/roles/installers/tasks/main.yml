@@ -50,33 +50,7 @@
   makepkg:
     name: yay
     state: present
-# - name: Check if yay exists
-#   stat:
-#     path: /usr/bin/yay
-#   register: yay_stat
 
-# - name: Pull yay AUR package
-#   become: false
-#   git:
-#     repo: "https://aur.archlinux.org/yay.git"
-#     dest: /home/ansible/yay
-#   when: not yay_stat.stat.exists
-
-# - name: Build and install yay
-#   become: false
-#   command: makepkg --noconfirm -si
-#   args:
-#     chdir: /home/ansible/yay
-#   when: not yay_stat.stat.exists
-
-# - name: Install yay from AUR using yay (for updates)
-#   become: false
-#   command: yay --noconfirm --noeditmenu -S yay
-#   when: not yay_stat.stat.exists
-
-# Install Snap
-# Note: We don't install Flatpak here as that needs to be installed after a Desktop
-# environment has been installed.
 - name: Install Apparmor
   pacman:
     name:
