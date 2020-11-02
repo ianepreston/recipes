@@ -13,4 +13,6 @@ aur_packages:
   - visual-studio-code-bin
   - lastpass
   - icaclient # https://wiki.archlinux.org/index.php/citrix
+  - teams
+  - zoom
 
