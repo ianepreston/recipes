@@ -12,4 +12,5 @@ aur_packages:
   - spotify # https://wiki.archlinux.org/index.php/spotify#Installation
   - visual-studio-code-bin
   - lastpass
+  - icaclient # https://wiki.archlinux.org/index.php/citrix
 
