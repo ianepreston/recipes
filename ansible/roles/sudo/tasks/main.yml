@@ -17,3 +17,8 @@
     group: root
     mode: 0440
     backup: false
+  
+- name: Remove the old wheel sudoer
+  file:
+    path: /etc/sudoers.d/wheel
+    state: absent
