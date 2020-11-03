@@ -69,6 +69,12 @@
     - vars/gnome-apps.yml
   roles:
     - install-applications
+  
+- name: GNOME environment Setup
+  hosts: gnome_desktop
+  become: true
+  roles:
+    - gnome-desktop-environment
 
 - name: Shared Desktop Applications
   hosts: desktops

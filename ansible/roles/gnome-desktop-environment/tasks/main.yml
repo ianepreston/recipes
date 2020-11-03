@@ -1,0 +1,6 @@
+---
+- name: Enable display manager
+  service: 
+    name: gdm.service
+    state: started
+    enabled: true
