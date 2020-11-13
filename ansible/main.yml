@@ -106,3 +106,9 @@
   roles:
     - role: install-applications
       when: ansible_virtualization_role != "guest"
+
+- name: Setup NFS
+  hosts: all
+  become: true
+  roles:
+    - nfs

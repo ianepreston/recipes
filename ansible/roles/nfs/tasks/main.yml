@@ -1,0 +1,17 @@
+---
+- name: Enable autofs service
+  systemd:
+    name: autofs
+    enabled: yes
+
+- name: Create a symlink to content
+  file:
+    src: /net/laconia/volume1/content
+    dest: /home/ipreston/content
+    state: link
+
+- name: Create a symlink to my data
+  file:
+    src: /net/laconia/volume1/ian
+    dest: /home/ipreston/nas_personal
+    state: link

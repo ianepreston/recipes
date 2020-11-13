@@ -51,6 +51,7 @@ pacman_packages:
   - exfat-utils # https://www.archlinux.org/packages/community/x86_64/exfat-utils/
   - cifs-utils # https://www.archlinux.org/packages/extra/x86_64/cifs-utils/
   - nfs-utils # https://www.archlinux.org/packages/core/x86_64/nfs-utils/
+  - autofs # https://wiki.archlinux.org/index.php/Autofs
   - sshfs # https://wiki.archlinux.org/index.php/SSHFS
   - udisks2 # https://wiki.archlinux.org/index.php/udisks
   - hdparm # https://wiki.archlinux.org/index.php/Hdparm
