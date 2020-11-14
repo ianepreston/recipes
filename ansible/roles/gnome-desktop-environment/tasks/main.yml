@@ -13,3 +13,13 @@
     group: root
     mode: 0640
     backup: false
+
+- name: Install material shell
+  become: false
+  yay:
+    name: gnome-shell-extension-material-shell
+    state: present
+
+- name: Enable material shell
+  become_user: ipreston
+  command: gnome-extensions enable material-shell@papyelgringo
