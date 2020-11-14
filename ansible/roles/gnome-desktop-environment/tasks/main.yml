@@ -21,5 +21,9 @@
     state: present
 
 - name: Enable material shell
+  become: true
   become_user: ipreston
+  environment:
+    DISPLAY: :0
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1001/bus"
   command: gnome-extensions enable material-shell@papyelgringo
