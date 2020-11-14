@@ -14,6 +14,7 @@ pacman_packages:
   - hunspell # https://www.archlinux.org/packages/extra/x86_64/hunspell/
   - hunspell-en_CA # https://www.archlinux.org/packages/extra/any/hunspell-en_CA/
   - cronie # https://wiki.archlinux.org/index.php/cron
+  - python-psutil
   # - gd # https://www.linuxjournal.com/article/8799
   # - logrotate # https://wiki.archlinux.org/index.php/logrotate
   # - libmicrodns # https://www.archlinux.org/packages/extra/x86_64/libmicrodns/
