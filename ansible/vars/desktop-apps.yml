@@ -5,6 +5,7 @@ pacman_packages:
   - meld # https://meldmerge.org/
   - steam
   - alacritty
+  - kitty
   - signal-desktop
 aur_packages:
 # Might change this later
