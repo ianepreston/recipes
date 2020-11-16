@@ -71,4 +71,6 @@ pacman_packages:
   - yelp # 3.38.1-1 Get help with GNOME 2020-10-03 
 
 aur_packages:
-  - gnome-shell-extension-material-shell-git
+  - gnome-shell-extension-material-shell
+  - gnome-shell-extension-appindicator
+    

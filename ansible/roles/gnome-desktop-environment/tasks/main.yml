@@ -14,13 +14,7 @@
     mode: 0640
     backup: false
 
-- name: Install material shell
-  become: false
-  yay:
-    name: gnome-shell-extension-material-shell
-    state: present
-
-- name: Enable material shell
+- name: Enable extensions
   become: true
   become_user: ipreston
   dconf:
