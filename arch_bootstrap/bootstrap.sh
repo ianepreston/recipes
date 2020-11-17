@@ -254,7 +254,7 @@ ask_for_disk_wipe() {
 ask_for_boot_partition() {
   print_title "Boot partition selection"
   print_title_info "Select the partition to use for boot. This should be an already existing boot partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
-  if [[ $MAIN_DISK == nvme* ]];
+  if [[ $MAIN_DISK == *nvme* ]];
   then
     regex="p[0-9][0-9]*$"
   else
@@ -278,7 +278,7 @@ ask_for_boot_partition() {
 ask_for_install_partition() {
   print_title "Installation partition selection"
   print_title_info "Select the partition to install Arch. This should be an already existing partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
-  if [[ $MAIN_DISK == nvme* ]];
+  if [[ $MAIN_DISK == *nvme* ]];
   then
     regex="p[0-9][0-9]*$"
   else
@@ -441,7 +441,7 @@ create_partitions() {
 
 set_partition_points() {
   if [[ $WIPE_DISK == "wipe" ]]; then
-    if [[ $MAIN_DISK == nvme* ]];
+    if [[ $MAIN_DISK == *nvme* ]];
     then
       partsuffix="p"
     else
