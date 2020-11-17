@@ -130,6 +130,8 @@ print_summary() {
 
   blank_line
   print_status "This is a single disk system so installation of all files will happen to $MAIN_DISK."
+  print_status "Boot partition will be $BOOT_PARTITION"
+  print_status "Install partition will be $INSTALL_PARTITION"
   if [[ $WIFI == 1 ]]; then
     print_status "Found WiFi, will install and enable WiFi Services"
   else
@@ -252,7 +254,13 @@ ask_for_disk_wipe() {
 ask_for_boot_partition() {
   print_title "Boot partition selection"
   print_title_info "Select the partition to use for boot. This should be an already existing boot partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
-  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep "[0-9]$"))
+  if [[ $MAIN_DISK == *nvme* ]];
+  then
+    regex="p[0-9][0-9]*$"
+  else
+    regex="[0-9][0-9]*$"
+  fi
+  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep $regex))
   blank_line
   PS3="Enter your option":
   lsblk $MAIN_DISK --output NAME,FSTYPE,LABEL,SIZE
@@ -270,7 +278,13 @@ ask_for_boot_partition() {
 ask_for_install_partition() {
   print_title "Installation partition selection"
   print_title_info "Select the partition to install Arch. This should be an already existing partition. If you don't see what you expect here STOP and run cfdisk or something to figure it out."
-  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep "[0-9]$"))
+  if [[ $MAIN_DISK == *nvme* ]];
+  then
+    regex="p[0-9][0-9]*$"
+  else
+    regex="[0-9][0-9]*$"
+  fi
+  partition_list=($(lsblk $MAIN_DISK --noheading --list --output NAME | awk '{print "/dev/" $1}' | grep $regex))
   blank_line
   PS3="Enter your option":
   lsblk $MAIN_DISK --output NAME,FSTYPE,LABEL,SIZE
@@ -427,8 +441,14 @@ create_partitions() {
 
 set_partition_points() {
   if [[ $WIPE_DISK == "wipe" ]]; then
-    BOOT_PARTITION="${MAIN_DISK}1"
-    INSTALL_PARTITION="${MAIN_DISK}2"
+    if [[ $MAIN_DISK == *nvme* ]];
+    then
+      partsuffix="p"
+    else
+      partsuffix=""
+    fi
+    BOOT_PARTITION="${MAIN_DISK}${partsuffix}1"
+    INSTALL_PARTITION="${MAIN_DISK}${partsuffix}2"
   else
     ask_for_boot_partition
     ask_for_install_partition
@@ -456,7 +476,7 @@ mount_partitions() {
   mkdir -p "/mnt/boot/efi"
 
   if [[ $UEFI == 1 ]]; then
-    mount -t vfat -o defaults,rw,relatime,utf8,errors=remount-ro "${MAIN_DISK}1" "/mnt/boot/efi"
+    mount -t vfat -o defaults,rw,relatime,utf8,errors=remount-ro $BOOT_PARTITION "/mnt/boot/efi"
   fi
 }
 
