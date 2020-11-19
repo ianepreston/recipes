@@ -1,0 +1,7 @@
+---
+package_set: "XPS 13 apps"
+pacman_packages:
+  - fprintd
+aur_packages:
+  - libfprint-tod-git
+  - libfprint-2-tod1-xps9300-bin
