@@ -19,7 +19,7 @@
   become_user: ipreston
   dconf:
     key: "/org/gnome/shell/enabled-extensions"
-    value: "['material-shell@papyelgringo']"
+    value: "''"
     state: present
 
 - name: Install Dracula GTK theme
@@ -43,3 +43,23 @@
     key: "/org/gnome/desktop/wm/preferences/theme"
     value: "'Ant-Dracula'"
     state: present
+
+- name: Enable tap to click
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/desktop/peripherals/touchpad/tap-to-click"
+    value: "true"
+    state: present
+
+- name: Enable terminal shortcut key
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/{{ item.end}}"
+    value: "'{{ item.entry}}'"
+    state: present
+  loop:
+    - { end: binding, entry: <Super>t}
+    - { end: 'command', entry: 'kitty'}
+    - { end: 'name', entry: 'Terminal'}
