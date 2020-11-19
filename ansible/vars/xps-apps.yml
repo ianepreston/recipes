@@ -1,7 +1,10 @@
 ---
+# Don't forget to actually import your OVPN file
 package_set: "XPS 13 apps"
 pacman_packages:
   - fprintd
+  - openvpn
+  - networkmanager-openvpn
 aur_packages:
   - libfprint-tod-git
   - libfprint-2-tod1-xps9300-bin
