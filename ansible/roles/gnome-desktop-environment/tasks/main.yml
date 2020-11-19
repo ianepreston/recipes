@@ -19,7 +19,15 @@
   become_user: ipreston
   dconf:
     key: "/org/gnome/shell/enabled-extensions"
-    value: "''"
+    value: "['appindicatorsupport@rgcjonas.gmail.com', 'pop-shell@system76.com']"
+    state: present
+
+- name: Set favorites bar
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/shell/favorite-apps"
+    value: "['org.gnome.Nautilus.desktop', 'firefox.desktop', 'spotify.desktop', 'visual-studio-code.desktop', 'kitty.desktop']"
     state: present
 
 - name: Install Dracula GTK theme
@@ -51,15 +59,3 @@
     key: "/org/gnome/desktop/peripherals/touchpad/tap-to-click"
     value: "true"
     state: present
-
-- name: Enable terminal shortcut key
-  become: true
-  become_user: ipreston
-  dconf:
-    key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/{{ item.end}}"
-    value: "'{{ item.entry}}'"
-    state: present
-  loop:
-    - { end: binding, entry: <Super>t}
-    - { end: 'command', entry: 'kitty'}
-    - { end: 'name', entry: 'Terminal'}

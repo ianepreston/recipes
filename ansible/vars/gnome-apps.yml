@@ -73,4 +73,5 @@ pacman_packages:
 aur_packages:
   # - gnome-shell-extension-material-shell
   - gnome-shell-extension-appindicator
+  - gnome-shell-extension-pop-shell-git
     
