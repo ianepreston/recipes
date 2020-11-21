@@ -115,10 +115,17 @@
   
 # https://wiki.archlinux.org/index.php/Fprint
 # https://wiki.archlinux.org/index.php/Dell_XPS_13_(9300)#Fingerprint_sensor
-- name: Fingerprint sensor
+# Add in your VPN conf after this
+- name: Laptop apps
   hosts: xps13
   become: true
   vars_files:
     - vars/xps-apps.yml
   roles:
     - install-applications
+
+- name: Dotfiles
+  hosts: all
+  become: true
+  roles:
+    - dotfiles
