@@ -1,0 +1,57 @@
+---
+- name: Add user primary groups
+  group:
+    name: "{{ item.name }}"
+    state: present
+  with_items: "{{ users }}"
+
+- name: Create users
+  user:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment }}"
+    group: "{{ item.name }}"
+    shell: "{{ item.shell }}"
+    password: "{{ item.password }}"
+    create_home: true
+  with_items: "{{ users }}"
+
+- name: Add users to the default groups
+  user:
+    name: "{{ item[0].name }}"
+    groups: "{{ item[1] }}"
+    append: true
+  with_nested:
+    - "{{ users }}"
+    - "{{ default_groups }}"
+
+- name: Add super users to the wheel group
+  user:
+    name: "{{ item }}"
+    groups: "wheel"
+    append: true
+  with_items: "{{ sudo_users }}"
+
+- name: Add users to the ssh group
+  user:
+    name: "{{ item }}"
+    groups: "ssh"
+    append: true
+  with_items: "{{ ssh_users }}"
+
+- name: Allow svcacct user to run sudo without a password
+  template:
+    src: etc-sudoers.d--svcacct.j2
+    dest: /etc/sudoers.d/98_svcacct
+    owner: root
+    group: root
+    mode: 0440
+    backup: false
+
+- name: Add users to manage virtualbox
+  user:
+    name: "{{ item }}"
+    groups: "vboxsf"
+    append: true
+  with_items: "{{ virtualbox_managers }}"
+  when: ansible_virtualization_role == "guest"
+    and ansible_virtualization_type == "virtualbox"

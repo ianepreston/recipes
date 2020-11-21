@@ -1,0 +1,33 @@
+---
+- name: Copy mkinitcpio.conf
+  template:
+    src: etc--mkinitcpio.conf.j2
+    dest: /etc/mkinitcpio.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  notify: Rebuild mkinitcpio
+
+- name: Copy default grub config
+  template:
+    src: etc-default--grub.j2
+    dest: /etc/default/grub
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  when: ansible_virtualization_role == "host"
+  notify: Rebuild grub
+
+- name: Copy default grub config (virtualbox)
+  template:
+    src: etc-default--grub--virtualbox.j2
+    dest: /etc/default/grub
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  when: ansible_virtualization_type == "virtualbox"
+    and ansible_virtualization_role == "guest"
+  notify: Rebuild grub

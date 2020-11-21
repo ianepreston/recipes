@@ -1,0 +1,12 @@
+---
+- name: Install pacman packages ({{ package_set }})
+  pacman:
+    name: "{{ pacman_packages }}"
+    state: present
+
+- name: Install aur packages ({{ package_set }})
+  become: false
+  yay:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ aur_packages }}"

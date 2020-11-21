@@ -1,0 +1,68 @@
+---
+- name: Enable display manager
+  service: 
+    name: gdm.service
+    state: started
+    enabled: true
+
+- name: Don't show ansible user on the login page
+  template:
+    src: var-lib-AccountsService-users--ansible.j2
+    dest: /var/lib/AccountsService/users/ansible
+    owner: root
+    group: root
+    mode: 0640
+    backup: false
+
+- name: Enable extensions
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/shell/enabled-extensions"
+    value: "['appindicatorsupport@rgcjonas.gmail.com', 'pop-shell@system76.com']"
+    state: present
+
+- name: Set favorites bar
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/shell/favorite-apps"
+    value: "['org.gnome.Nautilus.desktop', 'firefox.desktop', 'spotify.desktop', 'visual-studio-code.desktop', 'kitty.desktop']"
+    state: present
+
+- name: Install Dracula GTK theme
+  become: false
+  yay:
+    name: ant-dracula-gtk-theme
+    state: present
+
+- name: Enable Dracula GTK theme
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/desktop/interface/gtk-theme"
+    value: "'Ant-Dracula'"
+    state: present
+
+- name: Enable Dracula WM theme
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/desktop/wm/preferences/theme"
+    value: "'Ant-Dracula'"
+    state: present
+
+- name: Enable tap to click
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/desktop/peripherals/touchpad/tap-to-click"
+    value: "true"
+    state: present
+
+- name: Copy wallpaper file
+  copy: src=files/wallpaper.jpg dest=/home/ipreston/.wallpaper.jpg owner=ipreston group=ipreston mode=600
+
+- name: Set GNOME Wallpaper
+  become_user: ipreston
+  dconf: key="/org/gnome/desktop/background/picture-uri" value="'file:///home/ipreston/.wallpaper.jpg'"

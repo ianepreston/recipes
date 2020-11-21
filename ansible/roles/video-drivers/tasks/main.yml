@@ -1,0 +1,30 @@
+---
+# For now, I install these on every machine
+- name: Primary video drivers
+  pacman:
+    name:
+      - xf86-video-vesa
+      - xf86-video-intel
+      - xf86-video-amdgpu
+      - xf86-video-vmware
+      - nvidia
+      - nvidia-lts
+      - nvidia-utils
+      - mesa
+      - vulkan-intel
+      # - vulkan-radeon
+      - libva-mesa-driver
+      - libva-intel-driver
+      - libva-utils
+      - mesa-vdpau
+      - libva-vdpau-driver
+      - libvdpau-va-gl
+      - vdpauinfo
+      - libxss
+      - vulkan-mesa-layers
+      - intel-media-driver
+      - intel-media-sdk
+      - intel-compute-runtime
+      - glu
+    state: present
+# TODO: Setup  hosts or something so that I only install the drivers required

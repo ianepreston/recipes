@@ -1,0 +1,19 @@
+---
+- name: Install xorg server
+  pacman:
+    name:
+      - xorg-server
+      - xorg-xinput
+      - xorg-xkill
+      - xorg-server-xwayland
+      - xorg-xinit
+      - xorg-xrandr
+      - xorg-xwininfo
+      - xterm
+      - xdg-user-dirs
+      - xorg-fonts-alias-75dpi
+      - xorg-fonts-alias-100dpi
+      - x11-ssh-askpass
+      - desktop-file-utils
+      - xdg-utils
+    state: present

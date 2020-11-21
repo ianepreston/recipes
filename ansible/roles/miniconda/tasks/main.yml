@@ -1,0 +1,13 @@
+---
+- name: Download the miniconda installer
+  get_url:
+    url: https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    dest: /home/ipreston/miniconda.sh
+    checksum: sha256:879457af6a0bf5b34b48c12de31d4df0ee2f06a8e68768e5758c3293b2daf688
+
+- name: Change miniconda installer ownership, group and permissions
+  file:
+    path: /home/ipreston/miniconda.sh
+    owner: ipreston
+    group: users
+    mode: '0744'

@@ -1,0 +1,11 @@
+[gnome_desktop]
+luna
+
+[kde_desktop]
+
+[desktops:children]
+gnome_desktop
+kde_desktop
+
+[xps13]
+luna

@@ -1,0 +1,15 @@
+# /etc/pacman.d/hooks/mirrorlist.hook
+# {{ ansible_managed }}
+#
+# This script keeps the mirrorlist up-to-date
+#
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = pacman-mirrorlist
+
+[Action]
+Description = Updating mirror list...
+When = PostTransaction
+Depends = reflector
+Exec = /usr/bin/bash -c "/usr/bin/reflector --score 100 --fastest 20 --age 12 --sort rate --protocol https --save /etc/pacman.d/mirrorlist && if [[ -f /etc/pacman.d/mirrorlist.pacnew ]] ; then rm /etc/pacman.d/mirrorlist.pacnew ; fi"

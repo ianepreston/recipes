@@ -1,0 +1,81 @@
+---
+# Configure Pacman Maintenance
+- name: Install pacman-contrib
+  pacman:
+    name: "pacman-contrib" # https://www.archlinux.org/packages/community/x86_64/pacman-contrib/
+    state: present
+
+- name: Create pacman hook directory
+  file:
+    name: /etc/pacman.d/hooks
+    state: directory
+
+- name: Setup pacman mirror list update hook
+  template:
+    src: etc-pacman.d-hooks--mirrorlist.hook.j2
+    dest: /etc/pacman.d/hooks/mirrorlist.hook
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Setup pacman cache cleanup service
+  template:
+    src: etc-systemd-system--paccache.service.j2
+    dest: /etc/systemd/system/paccache.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd config
+
+- name: Setup pacman cache cleanup timer
+  template:
+    src: etc-systemd-system--paccache.timer.j2
+    dest: /etc/systemd/system/paccache.timer
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload systemd config
+    - restart paccache
+
+- name: Enable and start pacman cache cleanup timer
+  service:
+    name: paccache.timer
+    enabled: true
+    state: started
+
+# Install Yay, an aur helper
+- name: Ensure yay is installed
+  makepkg:
+    name: yay
+    state: present
+
+- name: Install Apparmor
+  pacman:
+    name:
+      - apparmor # Here just for Snap
+    state: present
+
+- name: Install Snapd
+  become: false
+  yay:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - snapd
+
+- name: Enable Apparmor Service
+  service:
+    name: apparmor.service
+    enabled: true
+
+- name: Enable Snapd Apparmor Service
+  service:
+    name: snapd.apparmor.service
+    enabled: true
+
+- name: Enable Snapd Socket
+  service:
+    name: snapd.socket
+    enabled: true

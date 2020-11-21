@@ -1,0 +1,11 @@
+---
+- name: Setup pacman.conf
+  template:
+    src: etc--pacman.conf.j2
+    dest: /etc/pacman.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
+  notify:
+    - refresh pacman cache

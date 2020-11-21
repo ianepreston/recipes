@@ -1,0 +1,20 @@
+---
+- name: Create client cache dir
+  file:
+    path: /home/ipreston/.ICAClient/cache
+    owner: ipreston
+    group: users
+    state: directory
+    mode: '0755'
+
+- name: Copy ini files
+  copy:
+    remote_src: yes
+    src: "/opt/Citrix/ICAClient/config/{{ item }}.ini"
+    dest: "/home/ipreston/.ICAClient/cache/{{ item }}.ini"
+  loop:
+    - All_Regions
+    - Trusted_Region
+    - Unknown_Region
+    - canonicalization
+    - regions

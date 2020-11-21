@@ -1,0 +1,26 @@
+---
+package_set: "Core Packages"
+pacman_packages:
+  - base
+  - base-devel
+  - linux-firmware
+  - lvm2
+  - dosfstools
+  - ntfs-3g
+  - mtools
+  - gptfdisk
+  - dialog
+  - networkmanager
+  - networkmanager-openvpn
+  - iw
+  - wireless_tools
+  - iwd
+  - reflector
+  - git
+  - gvim
+  - openssh
+  - ansible
+  - terminus-font
+  - breeze-grub
+  - systemd-swap
+  - go

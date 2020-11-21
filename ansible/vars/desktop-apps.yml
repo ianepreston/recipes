@@ -1,0 +1,19 @@
+---
+package_set: "Desktop/GUI Applications"
+pacman_packages:
+  - firefox
+  - meld # https://meldmerge.org/
+  - steam
+  - alacritty
+  - kitty
+  - signal-desktop
+aur_packages:
+# Might change this later
+  # for now have to run this first: curl -sS https://download.spotify.com/debian/pubkey_0D811D58.gpg | gpg --import -
+  - spotify # https://wiki.archlinux.org/index.php/spotify#Installation
+  - visual-studio-code-bin
+  - lastpass
+  - icaclient # https://wiki.archlinux.org/index.php/citrix
+  - teams
+  - zoom
+

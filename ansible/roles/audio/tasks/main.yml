@@ -1,0 +1,42 @@
+---
+- name: Install Audio Drivers And Codecs
+  pacman:
+    name:
+      - jack
+      - celt
+      - libffado
+      - realtime-privileges
+      - gstreamer
+      - gst-plugins-base
+      - gst-plugins-good
+      - gst-plugins-ugly
+      - gst-plugins-bad
+      - gst-libav
+      - gstreamer-vaapi
+      - libdvdcss
+      - libheif
+      - libraw
+      - faac
+      - libwmf
+      - ocl-icd
+      - bluez-utils
+      - pulseaudio
+      - pulseaudio-alsa
+      - pulseaudio-bluetooth
+      - pulseaudio-jack
+      - pulseaudio-lirc
+      - pulseaudio-zeroconf
+      - alsa-tools
+      - alsa-utils
+      - libao
+      - libmad
+      - libmp4v2
+      - libcdio-paranoia
+      - opusfile
+      - mkvtoolnix-cli
+    state: present
+
+- name: Enable Bluetooth Service
+  service:
+    name: bluetooth.service
+    enabled: true

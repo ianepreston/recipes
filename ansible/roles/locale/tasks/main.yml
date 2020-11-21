@@ -1,0 +1,14 @@
+---
+- name: Ensure locale is present
+  locale_gen:
+    name: "en_CA.UTF-8"
+    state: present
+
+- name: Install locale.conf file
+  template:
+    src: etc--locale.conf.j2
+    dest: /etc/locale.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: true
