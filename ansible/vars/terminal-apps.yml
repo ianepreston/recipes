@@ -6,6 +6,7 @@ pacman_packages:
   - texlive-most # https://wiki.archlinux.org/index.php/TeX_Live
   - neovim # a tidier vim with some useful features
   - vi
+  - hub # wrapper for git with some github specific functionality
   - powerline # https://wiki.archlinux.org/index.php/Powerline
   - powerline-fonts
   - mpd # is a lightweight music daemon.
