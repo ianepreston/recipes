@@ -49,19 +49,13 @@
   roles:
     - install-applications
 
-- name: Install Miniconda
-  hosts: desktops
-  become: true
-  roles:
-    - miniconda
-
 - name: KDE Desktop Environment Setup
   hosts: kde_desktop
   become: true
   roles:
     - xorg-install
     - kde-desktop-environment
-  
+
 - name: GNOME Desktop Apps
   hosts: gnome_desktop
   become: true
@@ -69,7 +63,7 @@
     - vars/gnome-apps.yml
   roles:
     - install-applications
-  
+
 - name: GNOME environment Setup
   hosts: gnome_desktop
   become: true
@@ -112,7 +106,7 @@
   become: true
   roles:
     - nfs
-  
+
 # https://wiki.archlinux.org/index.php/Fprint
 # https://wiki.archlinux.org/index.php/Dell_XPS_13_(9300)#Fingerprint_sensor
 # Add in your VPN conf after this
