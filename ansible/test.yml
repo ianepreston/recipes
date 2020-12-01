@@ -1,0 +1,8 @@
+---
+# Put in particular tasks you want to try here so you don't have to run the whole book
+
+- name: GNOME environment Setup
+  hosts: gnome_desktop
+  become: true
+  roles:
+    - gnome-desktop-environment

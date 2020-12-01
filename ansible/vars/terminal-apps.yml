@@ -1,10 +1,14 @@
 ---
 package_set: "Terminal Applications"
 pacman_packages:
+  - thefuck # https://www.archlinux.org/packages/community/any/thefuck/
   - biber # https://www.archlinux.org/packages/community/any/biber/
   - texlive-most # https://wiki.archlinux.org/index.php/TeX_Live
   - neovim # a tidier vim with some useful features
   - vi
+  - hub # wrapper for git with some github specific functionality
+  - powerline # https://wiki.archlinux.org/index.php/Powerline
+  - powerline-fonts
   - mpd # is a lightweight music daemon.
   - mpc # is a terminal interface for mpd.
   - mpv # is the patrician's choice video player.

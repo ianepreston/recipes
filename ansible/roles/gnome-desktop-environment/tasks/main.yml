@@ -1,6 +1,6 @@
 ---
 - name: Enable display manager
-  service: 
+  service:
     name: gdm.service
     state: started
     enabled: true
@@ -66,3 +66,15 @@
 - name: Set GNOME Wallpaper
   become_user: ipreston
   dconf: key="/org/gnome/desktop/background/picture-uri" value="'file:///home/ipreston/.wallpaper.jpg'"
+
+- name: Enable terminal shortcut
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/{{ item.name }}"
+    value: "{{ item.val }}"
+    state: present
+  loop:
+    - {name: 'binding', val: "'<Super>t'"}
+    - {name: 'command', val: "'kitty'"}
+    - {name: 'name', val: "'Launch terminal'"}
