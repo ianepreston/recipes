@@ -15,3 +15,9 @@
     src: /net/laconia/volume1/ian
     dest: /home/ipreston/nas_personal
     state: link
+
+- name: Symlink content to mnt
+  file:
+    src: /net/laconia/volume1/content
+    dest: /mnt/content
+    state: link
