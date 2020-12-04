@@ -78,3 +78,10 @@
     - {name: 'binding', val: "'<Super>t'"}
     - {name: 'command', val: "'kitty'"}
     - {name: 'name', val: "'Launch terminal'"}
+
+- name: List custom keybindings
+  become: true
+  become_user: ipreston
+  dconf:
+    key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings"
+    value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
