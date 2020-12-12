@@ -383,7 +383,7 @@ configure_mirrorlist() {
 
   print_status "    Backing up the original mirrorlist..."
   rm -f "/etc/pacman.d/mirrorlist.orig" |& tee -a "${LOG}"
-  mv -i "/etc/pacman.d/mirrorlist" "/etc/pacman.d/mirrorlist.orig" |& tee -a "${LOG}"
+  cp "/etc/pacman.d/mirrorlist" "/etc/pacman.d/mirrorlist.orig" |& tee -a "${LOG}"
 
   print_status "    Rotating the new list into place..."
   # Run reflector
