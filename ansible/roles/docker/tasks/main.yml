@@ -1,0 +1,13 @@
+---
+
+# Should only run if the directory doesn't already exist
+- name: Copy configs from nas
+  become: true
+  copy:
+    remote_src: yes
+    force: no
+    src: "/net/laconia/volume1/Resilio\ Sync/docker_conf"
+    dest: /home/ipreston
+    owner: ipreston
+    group: ipreston
+    # mode: u=rwX
