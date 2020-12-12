@@ -17,6 +17,7 @@
   become: true
   copy:
     remote_src: yes
+    force: no
     src: /home/ansible/dotfiles_repo/
     dest: /home/ipreston/.dotfiles
     owner: ipreston
@@ -27,6 +28,7 @@
   become: true
   copy:
     remote_src: yes
+    force: no
     src: /home/ansible/private_dotfiles_repo/
     dest: /home/ipreston/.private_dotfiles
     owner: ipreston
