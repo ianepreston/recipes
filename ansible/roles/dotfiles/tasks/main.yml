@@ -12,25 +12,3 @@
     version: main
     key_file: /home/ipreston/.ssh/ed25519_github
     dest: /home/ipreston/.private_dotfiles
-
-# - name: Copy public dotfiles
-#   become: true
-#   copy:
-#     remote_src: yes
-#     force: no
-#     src: /home/ansible/dotfiles_repo/
-#     dest: /home/ipreston/.dotfiles
-#     owner: ipreston
-#     group: ipreston
-#     mode: u=rwX,g-rwx,o-rwx
-
-# - name: Copy private dotfiles
-#   become: true
-#   copy:
-#     remote_src: yes
-#     force: no
-#     src: /home/ansible/private_dotfiles_repo/
-#     dest: /home/ipreston/.private_dotfiles
-#     owner: ipreston
-#     group: ipreston
-#     mode: u=rwX,g-rwx,o-rwx
