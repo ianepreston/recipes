@@ -190,8 +190,7 @@ check_boot_system() {
 }
 
 check_wifi() {
-  has_wifi=($(ls /sys/class/net | grep wlan))
-  if [ -n "$has_wifi" ]; then
+  if ls /sys/class/net | grep -q wlan ; then
     WIFI=1
   fi
 }
@@ -517,7 +516,7 @@ install_base_system() {
   # Install networking tools
   pacstrap /mnt dialog networkmanager networkmanager-openvpn |& tee -a "${LOG}"
   [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Part 5."
-  
+
   if [[ $WIFI == 1 ]]; then
     pacstrap /mnt wpa_supplicant wireless_tools |& tee -a "${LOG}"
     [[ $? -ne 0 ]] && error_msg "Installing base system to /mnt failed. Check error messages above. Wifi"
