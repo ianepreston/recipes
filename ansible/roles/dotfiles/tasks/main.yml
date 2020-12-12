@@ -3,34 +3,34 @@
   git:
     repo: git@github.com:ianepreston/dots.git
     version: main
-    dest: /home/ansible/dotfiles_repo
-    accept_hostkey: yes
+    key_file: /home/ipreston/.ssh/ed25519_github
+    dest: /home/ipreston/.dotfiles
 
 - name: Clone private dotfiles
   git:
     repo: git@github.com:ianepreston/private_dots.git
     version: main
-    dest: /home/ansible/private_dotfiles_repo
-    accept_hostkey: yes
-
-- name: Copy public dotfiles
-  become: true
-  copy:
-    remote_src: yes
-    force: no
-    src: /home/ansible/dotfiles_repo/
-    dest: /home/ipreston/.dotfiles
-    owner: ipreston
-    group: ipreston
-    mode: u=rwX,g-rwx,o-rwx
-
-- name: Copy private dotfiles
-  become: true
-  copy:
-    remote_src: yes
-    force: no
-    src: /home/ansible/private_dotfiles_repo/
+    key_file: /home/ipreston/.ssh/ed25519_github
     dest: /home/ipreston/.private_dotfiles
-    owner: ipreston
-    group: ipreston
-    mode: u=rwX,g-rwx,o-rwx
+
+# - name: Copy public dotfiles
+#   become: true
+#   copy:
+#     remote_src: yes
+#     force: no
+#     src: /home/ansible/dotfiles_repo/
+#     dest: /home/ipreston/.dotfiles
+#     owner: ipreston
+#     group: ipreston
+#     mode: u=rwX,g-rwx,o-rwx
+
+# - name: Copy private dotfiles
+#   become: true
+#   copy:
+#     remote_src: yes
+#     force: no
+#     src: /home/ansible/private_dotfiles_repo/
+#     dest: /home/ipreston/.private_dotfiles
+#     owner: ipreston
+#     group: ipreston
+#     mode: u=rwX,g-rwx,o-rwx
