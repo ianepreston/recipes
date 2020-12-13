@@ -1,0 +1,186 @@
+---
+# Should only run if the directory doesn't already exist
+- name: Copy configs from nas
+  become: true
+  copy:
+    remote_src: yes
+    force: no
+    src: "/net/laconia/volume1/Resilio\ Sync/docker_conf"
+    dest: /home/ansible
+    owner: ansible
+    group: ssh
+    # mode: u=rwX
+
+- name: Enable docker service
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Disable firewalld service
+  systemd:
+    name: firewalld
+    enabled: no
+    state: stopped
+
+- name: Start watchtower
+  become: true
+  docker_container:
+    name: watchtower
+    hostname: watchtower
+    image: containrrr/watchtower:latest
+    command: --cleanup --label-enable --schedule="0 2 * * *"
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+    restart_policy: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+- name: Start Resilio sync
+  become: true
+  docker_container:
+    name: resilio-sync
+    hostname: resilio-sync
+    image: ghcr.io/linuxserver/resilio-sync
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+      UMASK_SET: "022"
+    restart_policy: unless-stopped
+    volumes:
+      - /home/ansible/docker_conf/resilio:/config
+      - /home/ansible/docker_conf/resilio/downloads:/downloads
+      - /home/ansible/:/sync
+    published_ports:
+      - 8888:8888
+      - 55555:55555
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+- name: Start unifi
+  become: true
+  docker_container:
+    name: unifi-controller
+    hostname: unifi-controller
+    image: ghcr.io/linuxserver/unifi-controller:latest
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+      MEM_LIMIT: "1024M"
+    restart_policy: unless-stopped
+    volumes:
+      - /home/ansible/docker_conf/unifi:/config
+    published_ports:
+      - 3478:3478/udp
+      - 10001:10001/udp
+      - 8080:8080
+      - 8443:8443
+      - 1900:1900/udp #optional
+      - 8843:8843 #optional
+      - 8880:8880 #optional
+      - 6789:6789 #optional
+      - 5514:5514 #optional
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+- name: Create download network
+  community.general.docker_network:
+    name: "download_network"
+
+- name: Start download containers
+  become: true
+  docker_container:
+    name: "{{ item.name }}"
+    hostname: "{{ item.name }}"
+    image: "{{ item.image }}"
+    state: started
+    network_mode: "download_network"
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+    published_ports: "{{ item.ports }}"
+    restart_policy: unless-stopped
+    volumes: "{{ item.volumes }}"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+  loop:
+    - {
+        name: sabnzbd,
+        image: ghcr.io/linuxserver/sabnzbd:latest,
+        ports: ["8082:8080"],
+        volumes:
+          [
+            "/home/ansible/docker_conf/sabnzbd:/config",
+            "/mnt/content/Downloads/complete:/downloads",
+            "/mnt/content/Downloads/incomplete:/incomplete-downloads",
+            "/mnt/content/Downloads/watch:/watch",
+          ],
+      }
+    - {
+        name: nzbhydra,
+        image: ghcr.io/linuxserver/nzbhydra2:latest,
+        ports: ["5076:5076"],
+        volumes:
+          [
+            "/home/ansible/docker_conf/nzbhydra:/config",
+            "/mnt/content/Downloads/complete:/downloads",
+          ],
+      }
+    - {
+        name: sonarr,
+        image: ghcr.io/linuxserver/sonarr:latest,
+        ports: ["8989:8989"],
+        volumes:
+          [
+            "/home/ansible/docker_conf/sonarr:/config",
+            "/mnt/content/Downloads/complete:/downloads",
+            "/mnt/content/TV:/tv"
+          ],
+      }
+    - {
+        name: radarr,
+        image: ghcr.io/linuxserver/radarr:latest,
+        ports: ["7878:7878"],
+        volumes:
+          [
+            "/home/ansible/docker_conf/radarr:/config",
+            "/mnt/content/Downloads/complete:/downloads",
+            "/mnt/content/Movies:/movies"
+          ],
+      }
+    - {
+        name: mylar,
+        image: ghcr.io/linuxserver/mylar3:latest,
+        ports: ["8090:8090"],
+        volumes:
+          [
+            "/home/ansible/docker_conf/mylar:/config/mylar",
+            "/mnt/content/Downloads/complete:/downloads",
+            "/mnt/content/Comics:/comics"
+          ],
+      }
+    - {
+        name: unbooquity,
+        image: ghcr.io/linuxserver/ubooquity:latest,
+        ports: ["2202:2202", "2203:2203"],
+        volumes:
+          [
+            "/home/ansible/docker_conf/ubooquity:/config",
+            "/mnt/content/ubooquity_books:/books",
+            "/mnt/content/Comics:/comics"
+          ],
+      }
