@@ -123,3 +123,9 @@
   become: true
   roles:
     - dotfiles
+
+- name: Docker containers
+  hosts: servers
+  become: true
+  roles:
+    - docker
