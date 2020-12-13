@@ -149,3 +149,14 @@
             "/mnt/content/Comics:/comics"
           ],
       }
+    - {
+        name: unbooquity,
+        image: ghcr.io/linuxserver/ubooquity:latest,
+        ports: ["2202:2202", "2203:2203"],
+        volumes:
+          [
+            "/home/ipreston/docker_conf/ubooquity:/config",
+            "/mnt/content/ubooquity_books:/books",
+            "/mnt/content/Comics:/comics"
+          ],
+      }
