@@ -6,9 +6,9 @@
     remote_src: yes
     force: no
     src: "/net/laconia/volume1/Resilio\ Sync/docker_conf"
-    dest: /home/ipreston
-    owner: ipreston
-    group: ipreston
+    dest: /home/ansible
+    owner: ansible
+    group: ssh
     # mode: u=rwX
 
 - name: Enable docker service
@@ -42,6 +42,30 @@
     labels:
       com.centurylinklabs.watchtower.enable: "true"
 
+- name: Start Resilio sync
+  become: true
+  docker_container:
+    name: resilio-sync
+    hostname: resilio-sync
+    image: ghcr.io/linuxserver/resilio-sync
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+      UMASK_SET: "022"
+    restart_policy: unless-stopped
+    volumes:
+      - /home/ansible/docker_conf/resilio:/config
+      - /home/ansible/docker_conf/resilio/downloads:/downloads
+      - /home/ansible/:/sync
+    published_ports:
+      - 8888:8888
+      - 55555:55555
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
 - name: Start unifi
   become: true
   docker_container:
@@ -57,7 +81,7 @@
       MEM_LIMIT: "1024M"
     restart_policy: unless-stopped
     volumes:
-      - /home/ipreston/docker_conf/unifi:/config
+      - /home/ansible/docker_conf/unifi:/config
     published_ports:
       - 3478:3478/udp
       - 10001:10001/udp
@@ -100,7 +124,7 @@
         ports: ["8082:8080"],
         volumes:
           [
-            "/home/ipreston/docker_conf/sabnzbd:/config",
+            "/home/ansible/docker_conf/sabnzbd:/config",
             "/mnt/content/Downloads/complete:/downloads",
             "/mnt/content/Downloads/incomplete:/incomplete-downloads",
             "/mnt/content/Downloads/watch:/watch",
@@ -112,7 +136,7 @@
         ports: ["5076:5076"],
         volumes:
           [
-            "/home/ipreston/docker_conf/nzbhydra:/config",
+            "/home/ansible/docker_conf/nzbhydra:/config",
             "/mnt/content/Downloads/complete:/downloads",
           ],
       }
@@ -122,7 +146,7 @@
         ports: ["8989:8989"],
         volumes:
           [
-            "/home/ipreston/docker_conf/sonarr:/config",
+            "/home/ansible/docker_conf/sonarr:/config",
             "/mnt/content/Downloads/complete:/downloads",
             "/mnt/content/TV:/tv"
           ],
@@ -133,7 +157,7 @@
         ports: ["7878:7878"],
         volumes:
           [
-            "/home/ipreston/docker_conf/radarr:/config",
+            "/home/ansible/docker_conf/radarr:/config",
             "/mnt/content/Downloads/complete:/downloads",
             "/mnt/content/Movies:/movies"
           ],
@@ -144,7 +168,7 @@
         ports: ["8090:8090"],
         volumes:
           [
-            "/home/ipreston/docker_conf/mylar:/config/mylar",
+            "/home/ansible/docker_conf/mylar:/config/mylar",
             "/mnt/content/Downloads/complete:/downloads",
             "/mnt/content/Comics:/comics"
           ],
@@ -155,7 +179,7 @@
         ports: ["2202:2202", "2203:2203"],
         volumes:
           [
-            "/home/ipreston/docker_conf/ubooquity:/config",
+            "/home/ansible/docker_conf/ubooquity:/config",
             "/mnt/content/ubooquity_books:/books",
             "/mnt/content/Comics:/comics"
           ],
