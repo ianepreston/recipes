@@ -1,5 +1,4 @@
 ---
-
 # Should only run if the directory doesn't already exist
 - name: Copy configs from nas
   become: true
@@ -11,3 +10,141 @@
     owner: ipreston
     group: ipreston
     # mode: u=rwX
+
+- name: Enable docker service
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Disable firewalld service
+  systemd:
+    name: firewalld
+    enabled: no
+    state: stopped
+
+- name: Start watchtower
+  become: true
+  docker_container:
+    name: watchtower
+    hostname: watchtower
+    image: containrrr/watchtower:latest
+    command: --cleanup --label-enable --schedule="0 2 * * *"
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+    restart_policy: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+- name: Start unifi
+  become: true
+  docker_container:
+    name: unifi-controller
+    hostname: unifi-controller
+    image: linuxserver/unifi-controller:latest
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+      MEM_LIMIT: "1024M"
+    restart_policy: unless-stopped
+    volumes:
+      - /home/ipreston/docker_conf/unifi:/config
+    exposed_ports:
+      - 3478:3478/udp
+      - 10001:10001/udp
+      - 8080:8080
+      - 8081:8081
+      - 8443:8443
+      - 8843:8843
+      - 8880:8880
+      - 6789:6789
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+- name: Create download network
+  community.general.docker_network:
+    name: "download_network"
+
+- name: Start download containers
+  become: true
+  docker_container:
+    name: "{{ item.name }}"
+    hostname: "{{ item.name }}"
+    image: "{{ item.image }}"
+    state: started
+    network_mode: "download_network"
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+    published_ports: "{{ item.ports }}"
+    restart_policy: unless-stopped
+    volumes: "{{ item.volumes }}"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+  loop:
+    - {
+        name: sabnzbd,
+        image: ghcr.io/linuxserver/sabnzbd:latest,
+        ports: ["8082:8080"],
+        volumes:
+          [
+            "/home/ipreston/docker_conf/sabnzbd:/config",
+            "/mnt/content/Downloads/complete:/downloads",
+            "/mnt/content/Downloads/incomplete:/incomplete-downloads",
+            "/mnt/content/Downloads/watch:/watch",
+          ],
+      }
+    - {
+        name: nzbhydra,
+        image: ghcr.io/linuxserver/nzbhydra2:latest,
+        ports: ["5076:5076"],
+        volumes:
+          [
+            "/home/ipreston/docker_conf/nzbhydra:/config",
+            "/mnt/content/Downloads/complete:/downloads",
+          ],
+      }
+    - {
+        name: sonarr,
+        image: ghcr.io/linuxserver/sonarr:latest,
+        ports: ["8989:8989"],
+        volumes:
+          [
+            "/home/ipreston/docker_conf/sonarr:/config",
+            "/mnt/content/Downloads/complete:/downloads",
+            "/mnt/content/TV:/tv"
+          ],
+      }
+    - {
+        name: radarr,
+        image: ghcr.io/linuxserver/radarr:latest,
+        ports: ["7878:7878"],
+        volumes:
+          [
+            "/home/ipreston/docker_conf/radarr:/config",
+            "/mnt/content/Downloads/complete:/downloads",
+            "/mnt/content/Movies:/movies"
+          ],
+      }
+    - {
+        name: mylar,
+        image: ghcr.io/linuxserver/mylar3:latest,
+        ports: ["8090:8090"],
+        volumes:
+          [
+            "/home/ipreston/docker_conf/mylar:/config",
+            "/mnt/content/Downloads/complete:/downloads",
+            "/mnt/content/Comics:/comics"
+          ],
+      }
