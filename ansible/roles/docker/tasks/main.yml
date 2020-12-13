@@ -144,7 +144,7 @@
         ports: ["8090:8090"],
         volumes:
           [
-            "/home/ipreston/docker_conf/mylar:/config",
+            "/home/ipreston/docker_conf/mylar:/config/mylar",
             "/mnt/content/Downloads/complete:/downloads",
             "/mnt/content/Comics:/comics"
           ],
