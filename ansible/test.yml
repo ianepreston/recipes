@@ -1,8 +1,10 @@
 ---
 # Put in particular tasks you want to try here so you don't have to run the whole book
 
-- name: Setup NFS
-  hosts: all
+- name: Shared Desktop Applications
+  hosts: desktops
   become: true
+  vars_files:
+    - vars/desktop-apps.yml
   roles:
-    - nfs
+    - install-applications
