@@ -10,3 +10,9 @@
     name: "{{ item }}"
     state: present
   with_items: "{{ aur_packages }}"
+
+- name: Install snap packages {{ package_set }}
+  community.general.snap:
+    name: "{{ item}}"
+    state: present
+  with_items: "{{ snap_packages }}"
