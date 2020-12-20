@@ -4,7 +4,9 @@
 #
 # GRUB boot loader configuration
 
-GRUB_DEFAULT=0
+GRUB_DISABLE_SUBMENU=y
+GRUb_SAFEDEFAULT=true
+GRUB_DEFAULT=saved
 GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Arch`
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
 GRUB_CMDLINE_LINUX=""
@@ -51,7 +53,3 @@ GRUB_THEME="/usr/share/grub/themes/breeze/theme.txt"
 
 # Uncomment to get a beep at GRUB start
 GRUB_INIT_TUNE="480 440 1"
-
-# Uncomment to make GRUB remember the last selection. This requires
-# setting 'GRUB_DEFAULT=saved' above.
-#GRUB_SAVEDEFAULT="true"
