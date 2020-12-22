@@ -10,6 +10,7 @@
       - nvidia
       - nvidia-lts
       - nvidia-utils
+      - lib32-nvidia-utils
       - mesa
       - vulkan-intel
       # - vulkan-radeon
