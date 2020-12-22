@@ -85,3 +85,6 @@
   dconf:
     key: "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings"
     value: "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+
+# To enable pop shell shortcuts run:
+# /usr/share/gnome-shell/extensions/pop-shell@system76.com/scripts/configure.sh
