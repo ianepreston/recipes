@@ -2,16 +2,10 @@
 - name: Install Networking Tools
   pacman:
     name:
-      - firewalld
       - krb5
       - nfs-utils
       - util-linux
     state: present
-
-- name: Enable the Firewalld service
-  service:
-    name: firewalld.service
-    enabled: true
 
 - name: Enable the NFS Client
   service:
