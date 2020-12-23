@@ -19,4 +19,5 @@ snap_packages:
   - spotify
   - teams
   - zoom-client
+  - discord
 
