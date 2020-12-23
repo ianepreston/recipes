@@ -2,5 +2,8 @@
 - name: Rebuild mkinitcpio
   command: mkinitcpio -P
 
+- name: run os-prober
+  command: os-prober
+
 - name: Rebuild grub
   command: grub-mkconfig -o /boot/grub/grub.cfg
