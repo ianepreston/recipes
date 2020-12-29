@@ -18,8 +18,8 @@ pacman_packages:
   - ttf-font-awesome
   - ttf-linux-libertine
 #  - ttf-droid
-#  - ttf-roboto
-#  - ttf-roboto-mono
+  - ttf-roboto
+  - ttf-roboto-mono
 #  - ttf-dejavu
 #  - ttf-ubuntu-font-family
 aur_packages:
