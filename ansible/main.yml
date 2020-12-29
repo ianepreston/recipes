@@ -42,7 +42,7 @@
     - security
 
 - name: Terminal Applications
-  hosts: all
+  hosts: desktops
   become: true
   vars_files:
     - vars/terminal-apps.yml

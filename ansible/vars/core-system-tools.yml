@@ -26,6 +26,15 @@ pacman_packages:
   - zsh-completions # https://wiki.archlinux.org/index.php/zsh#Command_completion
   - tmux # https://wiki.archlinux.org/index.php/tmux
 
+  # Handy tools
+  - thefuck # https://www.archlinux.org/packages/community/any/thefuck/
+  - neovim # a tidier vim with some useful features
+  - vi
+  - hub # wrapper for git with some github specific functionality
+  - powerline # https://wiki.archlinux.org/index.php/Powerline
+  - powerline-fonts
+  - neofetch # lists system specs
+
 
   # Compression
   - atool # https://www.archlinux.org/packages/community/any/atool/
@@ -65,6 +74,7 @@ pacman_packages:
 
   # Coding
   - python-pip
+  - pyenv # https://www.archlinux.org/packages/community/any/pyenv/
   - cmake # https://www.archlinux.org/packages/extra/x86_64/cmake/
   - extra-cmake-modules # https://github.com/KDE/extra-cmake-modules
   - go # Needed for Yay
@@ -115,5 +125,6 @@ pacman_packages:
   # - texlive-most # https://wiki.archlinux.org/index.php/TeX_Live
 aur_packages:
   - rcm # https://aur.archlinux.org/packages/rcm
+  - lf-git # https://github.com/gokcehan/lf
   # - jdk11-adoptopenjdk
   # - jdk-adoptopenjdk
