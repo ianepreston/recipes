@@ -118,11 +118,11 @@
   roles:
     - install-applications
 
-- name: Dotfiles
-  hosts: all
-  become: true
-  roles:
-    - dotfiles
+# - name: Dotfiles
+#   hosts: all
+#   become: true
+#   roles:
+#     - dotfiles
 
 - name: Docker containers
   hosts: servers
