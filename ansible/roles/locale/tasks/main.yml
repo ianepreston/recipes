@@ -4,6 +4,11 @@
     name: "en_CA.UTF-8"
     state: present
 
+- name: Add en_US since other apps depend on it
+  locale_gen:
+    name: "en_US.UTF-8"
+    state: present
+
 - name: Install locale.conf file
   template:
     src: etc--locale.conf.j2
