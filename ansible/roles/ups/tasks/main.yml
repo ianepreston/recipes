@@ -1,0 +1,25 @@
+---
+
+- name: Install NUT
+  pacman:
+    name:
+      - nut
+
+- name: Install NUT monitor
+  become: false
+  yay:
+    name: nut-monitor
+
+- name: Set up monitoring
+  template:
+    src: etc--nut--upsmon.conf.j2
+    dest: /etc/nut/upsmon.conf
+    owner: root
+    group: nut
+    mode: 0640
+
+- name: Enable monitor service
+  service:
+    name: nut-monitor.service
+    enabled: true
+    state: started
