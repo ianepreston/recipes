@@ -184,3 +184,54 @@
             "/mnt/content/Comics:/comics"
           ],
       }
+
+- name: Create miniflux rss network
+  community.general.docker_network:
+    name: "miniflux_network"
+
+
+- name: Start postgres container for Miniflux
+  become: true
+  docker_container:
+    name: miniflux-postgres
+    hostname: miniflux-postgres
+    image: postgres:latest
+    network_mode: "miniflux_network"
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+      UMASK_SET: "022"
+      POSTGRES_USER: "miniflux"
+      POSTGRES_PASSWORD: "secret"
+    restart_policy: unless-stopped
+    volumes:
+      - "/home/ansible/docker_conf/miniflux_postgres:/var/lib/postgresql/data"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+
+- name: Start Miniflux
+  become: true
+  docker_container:
+    name: miniflux
+    hostname: miniflux
+    image: miniflux/miniflux:latest
+    network_mode: "miniflux_network"
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+      DATABASE_URL: "postgres://miniflux:secret@miniflux-postgres/miniflux?sslmode=disable"
+      RUN_MIGRATIONS: "1"
+      CREATE_ADMIN: "1"
+      ADMIN_USERNAME: "admin"
+      ADMIN_PASSWORD: "test123"
+    restart_policy: unless-stopped
+    published_ports:
+      - 80:8080
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
