@@ -34,6 +34,7 @@ pacman_packages:
   - powerline # https://wiki.archlinux.org/index.php/Powerline
   - powerline-fonts
   - neofetch # lists system specs
+  - iperf3 # run speed tests between systems
 
 
   # Compression
