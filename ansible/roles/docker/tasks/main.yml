@@ -181,6 +181,17 @@
           ],
       }
     - {
+        name: bazarr,
+        image: ghcr.io/linuxserver/bazarr:latest,
+        ports: ["6767:6767"],
+        volumes:
+          [
+            "/home/ansible/docker_conf/bazarr:/config",
+            "/mnt/content/TV:/tv",
+            "/mnt/content/Movies:/movies"
+          ],
+      }
+    - {
         name: sonarr,
         image: ghcr.io/linuxserver/sonarr:latest,
         ports: ["8989:8989"],
