@@ -23,6 +23,14 @@
     enabled: no
     state: stopped
 
+- name: Create download network
+  community.general.docker_network:
+    name: "download_network"
+
+- name: Create miniflux rss network
+  community.general.docker_network:
+    name: "miniflux_network"
+
 - name: Start watchtower
   become: true
   docker_container:
@@ -41,6 +49,37 @@
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       com.centurylinklabs.watchtower.enable: "true"
+
+- name: Start traefik
+  become: true
+  docker_container:
+    name: traefik
+    hostname: traefik
+    image: traefik:latest
+    state: started
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+    restart_policy: unless-stopped
+    published_ports:
+      - "80:80"
+      - "8081:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    networks_cli_compatible: "no"
+    networks:
+      - name: "miniflux_network"
+      - name: "download_network"
+
 
 - name: Start Resilio sync
   become: true
@@ -94,10 +133,6 @@
       - 5514:5514 #optional
     labels:
       com.centurylinklabs.watchtower.enable: "true"
-
-- name: Create download network
-  community.general.docker_network:
-    name: "download_network"
 
 - name: Start download containers
   become: true
@@ -185,18 +220,14 @@
           ],
       }
 
-- name: Create miniflux rss network
-  community.general.docker_network:
-    name: "miniflux_network"
-
-
 - name: Start postgres container for Miniflux
   become: true
   docker_container:
     name: miniflux-postgres
     hostname: miniflux-postgres
     image: postgres:latest
-    network_mode: "miniflux_network"
+    networks:
+      - name: "miniflux_network"
     state: started
     container_default_behavior: compatibility
     env:
@@ -218,7 +249,8 @@
     name: miniflux
     hostname: miniflux
     image: miniflux/miniflux:latest
-    network_mode: "miniflux_network"
+    networks:
+      - name: "miniflux_network"
     state: started
     container_default_behavior: compatibility
     env:
@@ -231,7 +263,10 @@
       ADMIN_USERNAME: "admin"
       ADMIN_PASSWORD: "test123"
     restart_policy: unless-stopped
-    published_ports:
-      - 80:8080
+    exposed_ports:
+      - "8080"
     labels:
       com.centurylinklabs.watchtower.enable: "true"
+      traefik.enable: "true"
+      traefik.http.routers.miniflux.rule: Host(`miniflux.ian.ca`)
+      traefik.http.routers.miniflux.entrypoints: web
