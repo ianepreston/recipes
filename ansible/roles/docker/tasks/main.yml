@@ -31,6 +31,10 @@
   community.general.docker_network:
     name: "miniflux_network"
 
+- name: Create calibre network
+  community.general.docker_network:
+    name: "calibre_network"
+
 - name: Start watchtower
   become: true
   docker_container:
@@ -79,6 +83,7 @@
     networks:
       - name: "miniflux_network"
       - name: "download_network"
+      - name: "calibre_network"
 
 
 - name: Start Resilio sync
@@ -270,3 +275,44 @@
       traefik.enable: "true"
       traefik.http.routers.miniflux.rule: Host(`miniflux.ian.ca`)
       traefik.http.routers.miniflux.entrypoints: web
+
+
+- name: Start calibre
+  become: true
+  docker_container:
+      name: calibre
+      hostname: calibre
+      image: ghcr.io/linuxserver/calibre
+      networks:
+        - name: "calibre_network"
+      state: started
+      container_default_behavior: compatibility
+      env:
+        TZ: "America/Edmonton"
+        PGID: "1000"
+        PUID: "1000"
+      restart_policy: unless-stopped
+      volumes:
+        [
+          "/home/ansible/docker_conf/calibre:/config",
+          "/mnt/content/books:/books",
+        ]
+      exposed_ports:
+        - "8080"
+        - "8081"
+      labels:
+        com.centurylinklabs.watchtower.enable: "true"
+        traefik.enable: "true"
+        traefik.http.routers.calibre-desk.rule: Host(`calibre-desk.ian.ca`)
+        traefik.http.routers.calibre-desk.service: calibre-desk
+        traefik.http.services.calibre-desk.loadbalancer.server.port: "8080"
+        traefik.http.routers.calibre-desk.entrypoints: web
+        traefik.http.routers.calibre-web.rule: Host(`calibre-web.ian.ca`)
+        traefik.http.routers.calibre-web.service: calibre-web
+        traefik.http.services.calibre-web.loadbalancer.server.port: "8081"
+        traefik.http.routers.calibre-web.entrypoints: web
+
+
+
+
+
