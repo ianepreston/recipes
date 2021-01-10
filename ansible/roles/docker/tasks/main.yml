@@ -35,6 +35,10 @@
   community.general.docker_network:
     name: "calibre_network"
 
+- name: Create Wallabag network
+  community.general.docker_network:
+    name: "wallabag_network"
+
 - name: Start watchtower
   become: true
   docker_container:
@@ -84,6 +88,7 @@
       - name: "miniflux_network"
       - name: "download_network"
       - name: "calibre_network"
+      - name: "wallabag_network"
 
 
 - name: Start Resilio sync
@@ -274,6 +279,7 @@
       PGID: "1000"
       PUID: "1000"
       DATABASE_URL: "postgres://miniflux:secret@miniflux-postgres/miniflux?sslmode=disable"
+      BASE_URL: "http://miniflux.ian.ca"
       RUN_MIGRATIONS: "1"
       CREATE_ADMIN: "1"
       ADMIN_USERNAME: "admin"
@@ -328,6 +334,70 @@
         traefik.http.routers.calibre-web.entrypoints: web
 
 
+- name: Start mariadb container for wallabag
+  become: true
+  docker_container:
+    name: wallabag-mariadb
+    hostname: wallabag-mariadb
+    image: mariadb:latest
+    networks:
+      - name: "wallabag_network"
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      MYSQL_ROOT_PASSWORD: "secret"
+    restart_policy: unless-stopped
+    volumes:
+      - "/home/ansible/docker_conf/wallabag_mariadb:/var/lib/mysql"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
 
+- name: Start redis for wallabag
+  become: true
+  docker_container:
+    name: wallabag-redis
+    hostname: wallabag-redis
+    image: redis:alpine
+    networks:
+      - name: "wallabag_network"
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+    restart_policy: unless-stopped
+    volumes:
+      - "/home/ansible/docker_conf/wallabag_redis:/data"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
 
-
+- name: Start wallabag
+  become: true
+  docker_container:
+      name: wallabag
+      hostname: wallabag
+      image: wallabag/wallabag:latest
+      networks:
+        - name: "wallabag_network"
+      state: started
+      container_default_behavior: compatibility
+      env:
+        TZ: "America/Edmonton"
+        MYSQL_ROOT_PASSWORD: "secret"
+        SYMFONY__ENV__DATABASE_DRIVER: pdo_mysql
+        SYMFONY__ENV__DATABASE_HOST: wallabag-mariadb
+        SYMFONY__ENV__DATABASE_PORT: "3306"
+        SYMFONY__ENV__DATABASE_NAME: wallabag
+        SYMFONY__ENV__DATABASE_USER: wallabag
+        SYMFONY__ENV__DATABASE_PASSWORD: wallabag123
+        SYMFONY__ENV__DOMAIN_NAME: http://wallabag.ian.ca
+      restart_policy: unless-stopped
+      volumes:
+        - "/home/ansible/docker_conf/wallabag:/var/www/wallabag/web/assets/images"
+      exposed_ports:
+        - "80"
+      labels:
+        com.centurylinklabs.watchtower.enable: "true"
+        traefik.enable: "true"
+        traefik.http.routers.wallabag.rule: Host(`wallabag.ian.ca`)
+        traefik.http.routers.wallabag.entrypoints: web
