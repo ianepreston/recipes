@@ -314,6 +314,7 @@
       published_ports:
         - "9091:8081"
         - "9090:9090"
+        - "9090:9090/udp"
       labels:
         com.centurylinklabs.watchtower.enable: "true"
         traefik.enable: "true"
