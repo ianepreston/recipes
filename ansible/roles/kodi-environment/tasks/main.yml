@@ -1,0 +1,20 @@
+---
+- name: Install Kodi
+  pacman:
+    name:
+      - xfce4  # I shouldn't need this but it's an easy way to get X11
+      - kodi
+      - kodi-x11
+    state: present
+
+- name: Install Kodi AUR Service
+  become: false
+  yay:
+    name: kodi-standalone-service
+    state: present
+
+- name: Enable kodi
+  service:
+    name: kodi-x11.service
+    enabled: true
+    state: "started"
