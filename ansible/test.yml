@@ -1,6 +1,12 @@
 ---
 # Put in particular tasks you want to try here so you don't have to run the whole book
 
+- name: HTPC
+  hosts: media
+  become: true
+  roles:
+    - kodi-environment
+
 - name: Docker containers
   hosts: servers
   become: true
