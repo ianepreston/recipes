@@ -108,7 +108,7 @@
     - nfs
 
 - name: UPS monitoring
-  hosts: towers
+  hosts: terra
   become: true
   roles:
     - ups
