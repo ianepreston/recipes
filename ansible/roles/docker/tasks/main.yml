@@ -39,6 +39,10 @@
   community.general.docker_network:
     name: "wallabag_network"
 
+- name: Create Kodi network
+  community.general.docker_network:
+    name: "kodi_network"
+
 - name: Start watchtower
   become: true
   docker_container:
