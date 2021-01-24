@@ -18,3 +18,12 @@
     name: kodi-x11.service
     enabled: true
     state: "started"
+
+- name: Copy advanced settings to connect to db
+  template:
+    src: var--lib--kodi--.kodi--userdata--advancedsettings.xml.j2
+    dest: /var/lib/kodi/.kodi/userdata/advancedsettings.xml
+    owner: kodi
+    group: kodi
+    mode: 0644
+    backup: true
