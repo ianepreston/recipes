@@ -405,3 +405,26 @@
         traefik.enable: "true"
         traefik.http.routers.wallabag.rule: Host(`wallabag.ian.ca`)
         traefik.http.routers.wallabag.entrypoints: web
+
+
+# Note that if the configs for this get lost you'll have to
+# configure a Kodi user again, check the Kodi docs
+- name: Start mariadb container for kodi
+  become: true
+  docker_container:
+    name: kodi-mariadb
+    hostname: kodi-mariadb
+    image: mariadb:latest
+    networks:
+      - name: "kodi_network"
+    state: started
+    container_default_behavior: compatibility
+    published_ports: "3306:3306"
+    env:
+      TZ: "America/Edmonton"
+      MYSQL_ROOT_PASSWORD: "secret"
+    restart_policy: unless-stopped
+    volumes:
+      - "/home/ansible/docker_conf/kodi_mariadb:/var/lib/mysql"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
