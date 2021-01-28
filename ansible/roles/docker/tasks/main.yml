@@ -428,3 +428,26 @@
       - "/home/ansible/docker_conf/kodi_mariadb:/var/lib/mysql"
     labels:
       com.centurylinklabs.watchtower.enable: "true"
+
+- name: Kodi headless container
+  become: true
+  docker_container:
+    name: kodi-headless
+    hostname: kodi-headless
+    image: linuxserver/kodi-headless:latest
+    networks:
+      - name: "kodi_network"
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+    restart_policy: unless-stopped
+    volumes:
+      - "/home/ansible/docker_conf/kodi_headless:/config/.kodi"
+    exposed_ports:
+      - "8080"
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+      traefik.enable: "true"
+      traefik.http.routers.kodi.rule: Host(`kodi.ian.ca`)
+      traefik.http.routers.kodi.entrypoints: web
