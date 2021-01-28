@@ -135,3 +135,9 @@
   become: true
   roles:
     - docker
+
+- name: HTPC
+  hosts: media
+  become: true
+  roles:
+    - kodi-environment
