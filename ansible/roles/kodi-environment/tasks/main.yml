@@ -3,6 +3,7 @@
   pacman:
     name:
       - xfce4  # I shouldn't need this but it's an easy way to get X11
+      - smbclient
       - kodi
       - kodi-x11
     state: present
