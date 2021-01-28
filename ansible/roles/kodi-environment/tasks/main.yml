@@ -20,11 +20,16 @@
     enabled: true
     state: "started"
 
-- name: Copy advanced settings to connect to db
+- name: Copy settings
   template:
-    src: advancedsettings.xml.j2
-    dest: /var/lib/kodi/.kodi/userdata/advancedsettings.xml
+    src: "{{ item }}.xml.j2"
+    dest: "/var/lib/kodi/.kodi/userdata/{{ item }}.xml"
     owner: kodi
     group: kodi
     mode: 0644
     backup: true
+  with_items:
+   - advancedsettings
+   - mediasources
+   - passwords
+   - sources
