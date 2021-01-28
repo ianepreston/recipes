@@ -22,7 +22,7 @@
 
 - name: Copy advanced settings to connect to db
   template:
-    src: var--lib--kodi--.kodi--userdata--advancedsettings.xml.j2
+    src: advancedsettings.xml.j2
     dest: /var/lib/kodi/.kodi/userdata/advancedsettings.xml
     owner: kodi
     group: kodi
