@@ -1,31 +1,31 @@
 ---
-- name: Install Kodi
-  pacman:
-    name:
-      - xfce4  # I shouldn't need this but it's an easy way to get X11
-      - smbclient
-      - kodi
-      - kodi-x11
-    state: present
+# - name: Install Kodi
+#   pacman:
+#     name:
+#       - xfce4  # I shouldn't need this but it's an easy way to get X11
+#       - smbclient
+#       - kodi
+#       - kodi-x11
+#     state: present
 
-- name: Install Kodi AUR Service
-  become: false
-  yay:
-    name: kodi-standalone-service
-    state: present
+# - name: Install Kodi AUR Service
+#   become: false
+#   yay:
+#     name: kodi-standalone-service
+#     state: present
 
-- name: Enable kodi
-  service:
-    name: kodi-x11.service
-    enabled: true
-    state: "started"
+# - name: Enable kodi
+#   service:
+#     name: kodi-x11.service
+#     enabled: true
+#     state: "started"
 
 - name: Copy settings
   template:
     src: "{{ item }}.xml.j2"
-    dest: "/var/lib/kodi/.kodi/userdata/{{ item }}.xml"
-    owner: kodi
-    group: kodi
+    dest: "/storage/.kodi/userdata/{{ item }}.xml"
+    owner: root
+    group: root
     mode: 0644
     backup: true
   with_items:

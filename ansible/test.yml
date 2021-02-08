@@ -7,8 +7,8 @@
   roles:
     - kodi-environment
 
-- name: Docker containers
-  hosts: servers
-  become: true
-  roles:
-    - docker
+# - name: Docker containers
+#   hosts: servers
+#   become: true
+#   roles:
+#     - docker
