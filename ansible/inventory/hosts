@@ -17,3 +17,6 @@ mars
 [towers]
 mars
 terra
+
+[media]
+eros  ansible_user=root
