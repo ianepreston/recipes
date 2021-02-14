@@ -9,6 +9,7 @@ pacman_packages:
   - signal-desktop
   - mediaelch
   - yubioath-desktop
+  - ccid
 aur_packages:
 # Might change this later
   - visual-studio-code-bin
