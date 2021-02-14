@@ -1,0 +1,5 @@
+- name: Enable yubico required service
+  service:
+    name: pcscd.service
+    state: started
+    enabled: true

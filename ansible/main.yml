@@ -49,6 +49,12 @@
   roles:
     - install-applications
 
+- name: Shared desktop environment setup
+  hosts: desktops
+  become: true
+  roles:
+    - shared-desktop-environment
+
 - name: KDE Desktop Environment Setup
   hosts: kde_desktop
   become: true
