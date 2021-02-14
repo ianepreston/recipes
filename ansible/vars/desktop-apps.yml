@@ -7,7 +7,6 @@ pacman_packages:
   - alacritty
   - kitty
   - signal-desktop
-  - calibre
   - mediaelch
   - yubioath-desktop
 aur_packages:
