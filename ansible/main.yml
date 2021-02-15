@@ -4,7 +4,7 @@
 # by a misconfigured SSH config so it is run here.  If it causes issues in this
 # main script it can be removed.
 - name: Bootstrap Setup
-  hosts: all
+  hosts: all:!eros
   become: true
   vars_files:
     - vars/bootstrap.yml
@@ -23,7 +23,7 @@
     - ssh
 
 - name: Core System Setup
-  hosts: all
+  hosts: all:!eros
   become: true
   vars_files:
     - vars/core-system-tools.yml
@@ -91,7 +91,7 @@
     - citrix
 
 - name: Install Fonts
-  hosts: all
+  hosts: all:!eros
   become: true
   vars_files:
     - vars/fonts.yml
@@ -99,7 +99,7 @@
     - install-applications
 
 - name: VM Applications
-  hosts: all
+  hosts: all:!eros
   become: true
   vars_files:
     - vars/vm-applications.yml
@@ -108,7 +108,7 @@
       when: ansible_virtualization_role != "guest"
 
 - name: Setup NFS
-  hosts: all
+  hosts: all:!eros
   become: true
   roles:
     - nfs
