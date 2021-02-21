@@ -76,13 +76,6 @@
     name: sddm.service
     enabled: true
 
-- name: Setup Firewall rule for KDEConnect
-  firewalld:
-    service: kdeconnect
-    state: enabled
-    permanent: yes
-    zone: home
-
 - name: Setup SDDM config
   template:
     src: etc--sddm.conf.j2
