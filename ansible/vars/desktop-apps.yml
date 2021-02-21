@@ -18,10 +18,7 @@ pacman_packages:
 aur_packages:
 # Might change this later
   - visual-studio-code-bin
-  - icaclient # https://wiki.archlinux.org/index.php/citrix
   - dolphin-emu-git
-  # - teams
-  # - zoom
 snap_packages:
   - bitwarden
   - spotify
