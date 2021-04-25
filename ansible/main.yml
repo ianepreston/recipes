@@ -84,12 +84,6 @@
   roles:
     - install-applications
 
-- name: Configure Citrix
-  hosts: desktops
-  become: true
-  roles:
-    - citrix
-
 - name: Install Fonts
   hosts: all:!eros
   become: true
