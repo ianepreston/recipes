@@ -43,6 +43,10 @@
   community.general.docker_network:
     name: "kodi_network"
 
+- name: Create comics network
+  community.general.docker_network:
+    name: "comics_network"
+
 - name: Start watchtower
   become: true
   docker_container:
@@ -93,6 +97,7 @@
       - name: "download_network"
       - name: "calibre_network"
       - name: "wallabag_network"
+      - name: "comics_network"
 
 
 - name: Start Resilio sync
@@ -233,17 +238,17 @@
             "/mnt/content/Comics:/comics"
           ],
       }
-    - {
-        name: unbooquity,
-        image: ghcr.io/linuxserver/ubooquity:latest,
-        ports: ["2202:2202", "2203:2203"],
-        volumes:
-          [
-            "/home/ansible/docker_conf/ubooquity:/config",
-            "/mnt/content/ubooquity_books:/books",
-            "/mnt/content/Comics:/comics"
-          ],
-      }
+    # - {
+    #     name: unbooquity,
+    #     image: ghcr.io/linuxserver/ubooquity:latest,
+    #     ports: ["2202:2202", "2203:2203"],
+    #     volumes:
+    #       [
+    #         "/home/ansible/docker_conf/ubooquity:/config",
+    #         "/mnt/content/ubooquity_books:/books",
+    #         "/mnt/content/Comics:/comics"
+    #       ],
+    #   }
 
 - name: Start postgres container for Miniflux
   become: true
@@ -451,3 +456,31 @@
       traefik.enable: "true"
       traefik.http.routers.kodi.rule: Host(`kodi.ian.ca`)
       traefik.http.routers.kodi.entrypoints: web
+
+- name: Komga comics server
+  become: true
+  docker_container:
+    name: komga
+    hostname: komga
+    image: gotson/komga
+    networks:
+      - name: "comics_network"
+    state: started
+    container_default_behavior: compatibility
+    env:
+      TZ: "America/Edmonton"
+      PGID: "1000"
+      PUID: "1000"
+    restart_policy: unless-stopped
+    volumes:
+      [
+        "/home/ansible/docker_conf/komga:/config",
+        "/mnt/content/Comics:/data",
+      ]
+    labels:
+        com.centurylinklabs.watchtower.enable: "true"
+        traefik.enable: "true"
+        traefik.http.routers.komga.rule: Host(`komga.ian.ca`)
+        traefik.http.routers.komga.service: komga
+        traefik.http.services.komga.loadbalancer.server.port: "8080"
+        traefik.http.routers.komga.entrypoints: web
