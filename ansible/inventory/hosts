@@ -19,4 +19,4 @@ mars
 terra
 
 [media]
-eros  ansible_user=root
+ganymede ansible_user=root
