@@ -471,6 +471,7 @@
       TZ: "America/Edmonton"
       PGID: "1000"
       PUID: "1000"
+      KOMGA_REMEMBERME_KEY: "isavelogins"
     restart_policy: unless-stopped
     volumes:
       [
